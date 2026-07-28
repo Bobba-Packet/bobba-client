@@ -1,0 +1,245 @@
+[
+  {
+    "folder": "01_frame",
+    "used_by": [
+      "Window frames when Illumina Dark theme is active (style 200)",
+      "Skin: illumina_dark_skin_frame (2812_illumina_dark_skin_frame_1_xml.bin)",
+      "Element: type=frame style=200 -> illumina_dark_skin_frame_xml",
+      "Layout wrapper: illumina_dark_frame_1_xml"
+    ],
+    "atlas_block": [
+      0,
+      0,
+      28,
+      30
+    ],
+    "pieces": {
+      "top_left": [
+        0,
+        0,
+        4,
+        4
+      ],
+      "top_center": [
+        4,
+        0,
+        20,
+        4
+      ],
+      "top_right": [
+        24,
+        0,
+        4,
+        4
+      ],
+      "center_left": [
+        0,
+        4,
+        4,
+        21
+      ],
+      "center_center": [
+        4,
+        4,
+        20,
+        21
+      ],
+      "center_right": [
+        24,
+        4,
+        4,
+        21
+      ],
+      "bottom_left": [
+        0,
+        25,
+        4,
+        5
+      ],
+      "bottom_center": [
+        4,
+        25,
+        20,
+        5
+      ],
+      "bottom_right": [
+        24,
+        25,
+        4,
+        5
+      ]
+    }
+  },
+  {
+    "folder": "02_button",
+    "used_by": [
+      "Buttons / container_buttons when Illumina Dark theme is active (style 200)",
+      "Skin: illumina_dark_skin_button (1816_illumina_dark_skin_button_1_xml.bin)",
+      "Element: type=button|container_button style=200 -> illumina_dark_skin_button_xml",
+      "Layout wrapper: illumina_dark_button_1_xml"
+    ],
+    "atlas_block": [
+      33,
+      0,
+      28,
+      29
+    ],
+    "pieces": {
+      "top_left": [
+        33,
+        0,
+        4,
+        4
+      ],
+      "top_center": [
+        37,
+        0,
+        20,
+        4
+      ],
+      "top_right": [
+        57,
+        0,
+        4,
+        4
+      ],
+      "center_left": [
+        33,
+        4,
+        4,
+        20
+      ],
+      "center_center": [
+        37,
+        4,
+        20,
+        20
+      ],
+      "center_right": [
+        57,
+        4,
+        4,
+        20
+      ],
+      "bottom_left": [
+        33,
+        24,
+        4,
+        5
+      ],
+      "bottom_center": [
+        37,
+        24,
+        20,
+        5
+      ],
+      "bottom_right": [
+        57,
+        24,
+        4,
+        5
+      ]
+    }
+  },
+  {
+    "folder": "03_border_and_header",
+    "used_by": [
+      "Borders AND title headers share the SAME atlas region",
+      "Skin border: illumina_dark_skin_border (2733_illumina_dark_skin_border_1_xml.bin)",
+      "Skin header: illumina_dark_skin_header (2074_illumina_dark_skin_header_1_xml.bin)",
+      "Element: type=border style=200 -> illumina_dark_skin_border_xml",
+      "Element: type=header style=200 -> illumina_dark_skin_header_xml",
+      "Also used by IlluminaBorderWidget when border_style=illumina_dark"
+    ],
+    "atlas_block": [
+      68,
+      0,
+      38,
+      30
+    ],
+    "pieces": {
+      "top_left": [
+        68,
+        0,
+        3,
+        3
+      ],
+      "top_center": [
+        71,
+        0,
+        32,
+        3
+      ],
+      "top_right": [
+        103,
+        0,
+        3,
+        3
+      ],
+      "center_left": [
+        68,
+        3,
+        3,
+        24
+      ],
+      "center_center": [
+        71,
+        3,
+        32,
+        24
+      ],
+      "center_right": [
+        103,
+        3,
+        3,
+        24
+      ],
+      "bottom_left": [
+        68,
+        27,
+        3,
+        3
+      ],
+      "bottom_center": [
+        71,
+        27,
+        32,
+        3
+      ],
+      "bottom_right": [
+        103,
+        27,
+        3,
+        3
+      ]
+    }
+  },
+  {
+    "folder": "04_extra_unreferenced",
+    "used_by": [
+      "Present in habbo_skin_illumina_dark atlas but NOT referenced by current dark skin XMLs",
+      "Likely leftover button states (hover/pressed) never wired up",
+      "Skin XMLs only use the first button block at (33,0)"
+    ],
+    "blocks": {
+      "button_block_y34": [
+        33,
+        34,
+        28,
+        29
+      ],
+      "button_block_y68": [
+        33,
+        68,
+        28,
+        29
+      ],
+      "button_block_y102": [
+        33,
+        102,
+        28,
+        29
+      ]
+    }
+  }
+]

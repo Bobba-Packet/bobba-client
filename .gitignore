@@ -1,0 +1,43 @@
+# Git ignore — HabboAirBobba
+
+# Baseline / inject outputs (large binaries)
+/HabboAir.swf
+/HabboAir_bobba.swf
+/HabboAir.swf.bak_*
+/HabboAir.swf.backup
+/HabboAir*.swf
+
+# FFDec (optional local copy - prefer sibling traxmachine or download)
+ffdec/
+
+# Decompiled upstream dump (huge). Keep Bobba-owned helpers tracked.
+cleanswf/scripts/**
+!cleanswf/scripts/Logger.as
+!cleanswf/scripts/com/
+!cleanswf/scripts/com/sulake/
+!cleanswf/scripts/com/sulake/habbo/
+!cleanswf/scripts/com/sulake/habbo/window/
+!cleanswf/scripts/com/sulake/habbo/window/utils/
+!cleanswf/scripts/com/sulake/habbo/window/utils/bobba/
+!cleanswf/scripts/com/sulake/habbo/window/utils/bobba/**
+
+# Deployed pack copies (source of truth is brand-pack/ + client-assets/)
+/bobba/
+/local_include/
+
+# Tooling scratch
+tools/inject-staging/
+tools/inject-log.txt
+
+# ADL / package outputs
+runtime/**
+!runtime/.gitkeep
+dist/
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log
+.idea/
+.vscode/

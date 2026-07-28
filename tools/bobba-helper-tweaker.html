@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bobba Helper Layout Tweaker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0e1014;
+    --panel: #181c28;
+    --fg: #e8eaef;
+    --muted: #9aa3b5;
+    --accent: #31a342;
+    --line: #2c3348;
+    --danger: #c44;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 13px/1.4 "Ubuntu", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 12px;
+    padding: 12px;
+    min-height: 100vh;
+  }
+  .stage-wrap {
+    background: #14161e;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    overflow: auto;
+  }
+  .chrome {
+    background: #000;
+    border: 1px solid #6a6a6a;
+    box-shadow: 0 8px 28px rgba(0,0,0,.45);
+    user-select: none;
+  }
+  .chrome-title {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #111;
+    border-bottom: 1px solid #333;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+  }
+  .chrome-x {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    background: #333;
+    border: 1px solid #666;
+    color: #ccc;
+    font-size: 11px;
+    line-height: 14px;
+    text-align: center;
+  }
+  #stage {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    image-rendering: pixelated;
+  }
+  #stage img, #stage canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  .hint { color: var(--muted); font-size: 12px; align-self: stretch; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+  }
+  h1 { font-size: 15px; margin: 0; }
+  h2 {
+    font-size: 11px;
+    margin: 10px 0 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+  h2:first-of-type { border-top: 0; padding-top: 0; }
+  label.ctrl {
+    display: grid;
+    grid-template-columns: 92px 1fr 58px;
+    gap: 6px;
+    align-items: center;
+    margin: 1px 0;
+  }
+  label.ctrl span { color: var(--muted); font-size: 12px; }
+  input[type=range] { width: 100%; }
+  input[type=number] {
+    width: 58px;
+    background: #10131c;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 3px 4px;
+  }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .row button {
+    background: #252b3d;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 7px 10px;
+    cursor: pointer;
+  }
+  .row button.primary {
+    background: var(--accent);
+    color: #111;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .row button.warn { background: #3a2a18; border-color: #6a4a28; }
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    background: #10131c;
+    color: #d7dde8;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px;
+    font: 11px/1.35 ui-monospace, Consolas, monospace;
+    resize: vertical;
+  }
+  .guides {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .guide-line {
+    position: absolute;
+    background: rgba(49,163,66,.35);
+  }
+  .guide-line.v { width: 1px; top: 0; bottom: 0; }
+  .guide-line.h { height: 1px; left: 0; right: 0; }
+  .layer { position: absolute; }
+  .txt {
+    position: absolute;
+    font-family: "Ubuntu", sans-serif;
+    white-space: pre-wrap;
+    word-break: break-word;
+    pointer-events: none;
+  }
+  .txt.bold { font-weight: 700; }
+  .chk-row {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    cursor: default;
+  }
+  .chk-row img { display: block; }
+  .chk-row .lbl {
+    font-family: "Ubuntu", sans-serif;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .chk-row .lbl .green { color: #31a342; }
+  .btn-sprite {
+    position: absolute;
+    image-rendering: pixelated;
+    cursor: pointer;
+  }
+  .status { color: var(--muted); font-size: 11px; min-height: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage-wrap">
+    <div class="chrome" id="chrome">
+      <div class="chrome-title">Bobba Helper<span class="chrome-x">×</span></div>
+      <div id="stage"></div>
+    </div>
+    <div class="hint">
+      Live preview of the Bobba Helper content area (Habbo frame chrome is approximate).
+      Drag range sliders or type numbers — export AS3 constants when it looks right, then paste into
+      <code>BobbaHelperView.as</code> (or ask the agent to apply the export).
+    </div>
+  </div>
+  <div class="panel">
+    <h1>Bobba Helper tweaker</h1>
+    <div class="status" id="status">Loading assets…</div>
+
+    <h2>Window / canvas</h2>
+    <div id="g-window"></div>
+
+    <h2>Logo</h2>
+    <div id="g-logo"></div>
+
+    <h2>Header copy</h2>
+    <div id="g-copy"></div>
+
+    <h2>Columns / toggles</h2>
+    <div id="g-cols"></div>
+
+    <h2>Sections Y</h2>
+    <div id="g-sections"></div>
+
+    <h2>Buttons</h2>
+    <div id="g-buttons"></div>
+
+    <h2>Flower</h2>
+    <div id="g-flower"></div>
+
+    <div class="row">
+      <button class="primary" id="btnExport">Export AS3</button>
+      <button id="btnCopy">Copy</button>
+      <button id="btnApply">Load export</button>
+      <button class="warn" id="btnReset">Reset</button>
+    </div>
+    <label class="ctrl" style="grid-template-columns:auto 1fr;margin-top:4px">
+      <input type="checkbox" id="showGuides" checked />
+      <span style="color:var(--muted)">Show guide lines</span>
+    </label>
+    <textarea id="out" spellcheck="false"></textarea>
+  </div>
+</div>
+<script src="bobba-helper-tweaker.js"></script>
+</body>
+</html>

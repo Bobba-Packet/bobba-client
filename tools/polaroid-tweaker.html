@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Polaroid Slot Tweaker</title>
+<style>
+  @font-face {
+    font-family: "Volter Bold";
+    src: url("VolterBold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+  }
+  :root { color-scheme: dark; --bg:#12141a; --panel:#1c2030; --fg:#e8eaef; --muted:#9aa3b5; --accent:#ff8c32; --line:#2c3348; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.4 system-ui,Segoe UI,sans-serif; background: var(--bg); color: var(--fg); }
+  .wrap { display: grid; grid-template-columns: 1fr 360px; gap: 12px; padding: 12px; min-height: 100vh; }
+  .stage-wrap { background: #14161e; border: 1px solid var(--line); border-radius: 8px; padding: 10px; display:flex; flex-direction:column; gap:8px; }
+  canvas { width: 100%; height: auto; background: #14161e; border-radius: 4px; cursor: crosshair; }
+  .hint { color: var(--muted); font-size: 12px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px; display:flex; flex-direction:column; gap:8px; max-height: calc(100vh - 24px); overflow:auto; }
+  h1 { font-size: 15px; margin: 0; }
+  h2 { font-size: 12px; margin: 8px 0 0; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .tabs { display:flex; gap:4px; flex-wrap:wrap; }
+  .tabs button { flex:1; min-width:48px; background:#252b3d; color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:6px; cursor:pointer; }
+  .tabs button.active { background: var(--accent); color:#111; border-color: var(--accent); font-weight:700; }
+  label.ctrl { display:grid; grid-template-columns: 64px 1fr 58px; gap:6px; align-items:center; margin: 2px 0; }
+  label.ctrl span { color: var(--muted); }
+  input[type=range] { width:100%; }
+  input[type=number] { width:58px; background:#10131c; color:var(--fg); border:1px solid var(--line); border-radius:4px; padding:3px 4px; }
+  .row { display:flex; gap:6px; flex-wrap:wrap; }
+  .row button { background:#252b3d; color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:7px 10px; cursor:pointer; }
+  .row button.primary { background: var(--accent); color:#111; border-color: var(--accent); font-weight:700; }
+  textarea { width:100%; min-height:160px; background:#10131c; color:#d7dde8; border:1px solid var(--line); border-radius:6px; padding:8px; font:12px/1.35 ui-monospace,Consolas,monospace; resize:vertical; }
+  .slot-title { font-weight:700; margin-top:2px; }
+  .chk { display:flex; gap:8px; align-items:center; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage-wrap">
+    <canvas id="cv" width="1280" height="800"></canvas>
+    <div class="hint">Labels follow each photo (centered name + bottom-right likes on the polaroid strip). Font scales with photo size. Alt-drag name · Ctrl-drag likes · Alt+Shift-scroll = textScale.</div>
+  </div>
+  <div class="panel">
+    <h1>Polaroid slot tweaker</h1>
+    <div class="tabs" id="tabs"></div>
+    <div class="slot-title" id="slotTitle">Slot 0</div>
+    <h2>Photo</h2>
+    <label class="ctrl"><span>cx</span><input type="range" id="cx" min="0" max="838" step="1" /><input type="number" id="cxN" step="1" /></label>
+    <label class="ctrl"><span>cy</span><input type="range" id="cy" min="0" max="302" step="1" /><input type="number" id="cyN" step="1" /></label>
+    <label class="ctrl"><span>rot</span><input type="range" id="rot" min="-45" max="45" step="0.1" /><input type="number" id="rotN" step="0.1" /></label>
+    <label class="ctrl"><span>size</span><input type="range" id="size" min="40" max="240" step="1" /><input type="number" id="sizeN" step="1" /></label>
+    <h2>Name (centered, photo-local)</h2>
+    <label class="ctrl"><span>nameDx</span><input type="range" id="nameDx" min="-80" max="80" step="1" /><input type="number" id="nameDxN" step="1" /></label>
+    <label class="ctrl"><span>nameDy</span><input type="range" id="nameDy" min="-40" max="40" step="1" /><input type="number" id="nameDyN" step="1" /></label>
+    <label class="ctrl"><span>textScale</span><input type="range" id="textScale" min="0.5" max="2" step="0.05" /><input type="number" id="textScaleN" step="0.05" /></label>
+    <h2>Likes (bottom-right offset)</h2>
+    <label class="ctrl"><span>likesDx</span><input type="range" id="likesDx" min="-60" max="60" step="1" /><input type="number" id="likesDxN" step="1" /></label>
+    <label class="ctrl"><span>likesDy</span><input type="range" id="likesDy" min="-40" max="40" step="1" /><input type="number" id="likesDyN" step="1" /></label>
+    <div class="chk"><input type="checkbox" id="showNums" checked /><label for="showNums">Show slot numbers</label></div>
+    <div class="chk"><input type="checkbox" id="showNames" checked /><label for="showNames">Show author names</label></div>
+    <div class="chk"><input type="checkbox" id="usePhotos" checked /><label for="usePhotos">Try community photos</label></div>
+    <div class="row">
+      <button class="primary" id="btnExport">Export</button>
+      <button id="btnCopy">Copy</button>
+      <button id="btnApply">Load export</button>
+      <button id="btnReset">Reset</button>
+    </div>
+    <textarea id="out" spellcheck="false"></textarea>
+  </div>
+</div>
+<script src="polaroid-tweaker-data.js"></script>
+<script src="polaroid-tweaker.js"></script>
+</body>
+</html>

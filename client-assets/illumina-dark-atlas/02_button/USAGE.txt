@@ -1,0 +1,4 @@
+Buttons / container_buttons when Illumina Dark theme is active (style 200)
+Skin: illumina_dark_skin_button (1816_illumina_dark_skin_button_1_xml.bin)
+Element: type=button|container_button style=200 -> illumina_dark_skin_button_xml
+Layout wrapper: illumina_dark_button_1_xml

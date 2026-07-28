@@ -1,0 +1,4 @@
+Window frames when Illumina Dark theme is active (style 200)
+Skin: illumina_dark_skin_frame (2812_illumina_dark_skin_frame_1_xml.bin)
+Element: type=frame style=200 -> illumina_dark_skin_frame_xml
+Layout wrapper: illumina_dark_frame_1_xml

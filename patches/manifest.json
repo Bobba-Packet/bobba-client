@@ -1,0 +1,33 @@
+{
+  "description": "Scripts staged for FFDec -importScript. Keep this list minimal - only safe existing ABC scripts.",
+  "packName": "bobba",
+  "stage": [
+    "Logger.as",
+    "login/Background.as",
+    "login/SsoTokenView.as",
+    "login/LoginFlow.as",
+    "onBoardingHcUi/InputField.as",
+    "onBoardingHcUi/LoaderUI.as",
+    "splash/PhotoSplashScreen.as",
+    "HabboLoadingScreen.as",
+    "HabboAir.as",
+    "com/sulake/habbo/toolbar/extensions/PurseAreaExtension.as",
+    "com/sulake/habbo/toolbar/HabboToolbar.as",
+    "com/sulake/habbo/avatar/AvatarEditorView.as",
+    "com/sulake/habbo/window/LilithCustoms.as",
+    "com/sulake/habbo/window/HabboWindowManagerComponent.as"
+  ],
+  "merge": {
+    "host": "com/sulake/habbo/window/HabboWindowManagerComponent.as",
+    "helpers": [
+      "com/sulake/habbo/window/utils/bobba/BobbaPack.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaHelperView.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaHelperEditor.as"
+    ]
+  },
+  "notes": [
+    "Do NOT stage IHabboWindowManagerComponent, EventDispatcherWrapper, or Core - FFDec breaks ABC slots.",
+    "Bobba Helper (:bobba) merges Editor/View/Pack into HabboWindowManagerComponent as file-private classes.",
+    "Loading: community photos API + Bobba logo/bar; SSO fades into loading screen."
+  ]
+}

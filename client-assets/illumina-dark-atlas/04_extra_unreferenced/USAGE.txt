@@ -1,0 +1,3 @@
+Present in habbo_skin_illumina_dark atlas but NOT referenced by current dark skin XMLs
+Likely leftover button states (hover/pressed) never wired up
+Skin XMLs only use the first button block at (33,0)

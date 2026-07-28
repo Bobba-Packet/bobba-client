@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Minimal descriptor for ADL debug (no fullscreen, easier to see errors). -->
+<!-- Adapted from traxmachine/tools/HabboAir-debug-app.xml -->
+<application xmlns="http://ns.adobe.com/air/application/51.2">
+  <id>packet.bobba.airbobba.debug</id>
+  <filename>BobbaClientDebug</filename>
+  <name>Bobba Client Debug</name>
+  <versionNumber>0.1.0</versionNumber>
+  <initialWindow>
+    <content>HabboAir.swf</content>
+    <title>Bobba Client Debug</title>
+    <visible>true</visible>
+    <fullScreen>false</fullScreen>
+    <width>1280</width>
+    <height>800</height>
+    <resizable>true</resizable>
+    <renderMode>cpu</renderMode>
+  </initialWindow>
+  <supportedProfiles>desktop extendedDesktop</supportedProfiles>
+</application>

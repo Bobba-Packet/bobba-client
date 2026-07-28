@@ -1,0 +1,6 @@
+Borders AND title headers share the SAME atlas region
+Skin border: illumina_dark_skin_border (2733_illumina_dark_skin_border_1_xml.bin)
+Skin header: illumina_dark_skin_header (2074_illumina_dark_skin_header_1_xml.bin)
+Element: type=border style=200 -> illumina_dark_skin_border_xml
+Element: type=header style=200 -> illumina_dark_skin_header_xml
+Also used by IlluminaBorderWidget when border_style=illumina_dark
