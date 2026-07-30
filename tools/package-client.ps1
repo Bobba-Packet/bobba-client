@@ -96,8 +96,10 @@ $meta = @{
     swf = "HabboAir.swf"
 } | ConvertTo-Json
 Set-Content -Path (Join-Path $DistDir "bobba-client.json") -Value $meta -Encoding UTF8
+Set-Content -Path (Join-Path $DistDir "VERSION.txt") -Value $Version -NoNewline
 
 Write-Host ""
 Write-Host "OK: $DistDir"
 Write-Host "    version $Version"
-Write-Host "Next: zip/upload for launcher downloads\{airbobba}\{version}\"
+Write-Host "Next: tools\publish-release.ps1 -Version $Version"
+Write-Host "      (uploads HabboAir.swf + HabboAirBobbaPatch.zip to GitHub Releases tag latest)"

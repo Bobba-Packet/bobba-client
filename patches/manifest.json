@@ -15,7 +15,8 @@
     "com/sulake/habbo/toolbar/HabboToolbar.as",
     "com/sulake/habbo/avatar/AvatarEditorView.as",
     "com/sulake/habbo/window/LilithCustoms.as",
-    "com/sulake/habbo/window/HabboWindowManagerComponent.as"
+    "com/sulake/habbo/window/HabboWindowManagerComponent.as",
+    "com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as"
   ],
   "merge": {
     "host": "com/sulake/habbo/window/HabboWindowManagerComponent.as",
