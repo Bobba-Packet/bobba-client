@@ -52,7 +52,12 @@ AirPlus is the **base**, not the destination. Ecosystem features should live **o
 
 **Landed:** baseline `HabboAir.swf`, FFDec export in `cleanswf/scripts/`, Bobba helpers (`Logger.as`, `utils/bobba/`), inject/merge/debug/package tooling.
 
-**Still needed:** pin AirPlus/SWF version in docs, finish brand imports, first packaged `dist/` the launcher can install, enable launcher `AirBobba` once artifacts ship.
+**Releases:** injected SWF ships on GitHub Releases (`latest` + version tags). Launcher installs from:
+
+- `https://github.com/Bobba-Packet/HabboAirBobba/releases/download/latest/HabboAir.swf`
+- `https://github.com/Bobba-Packet/HabboAirBobba/releases/download/latest/HabboAirBobbaPatch.zip`
+
+Publish: `tools\publish-release.ps1 -Version 0.1.0-alpha` (after inject). Folder: `%AppData%\packet.bobba.launcher\downloads\airbobba\{version}\` (version = SWF `Last-Modified` epoch).
 
 ---
 
@@ -63,7 +68,8 @@ AirPlus is the **base**, not the destination. Ecosystem features should live **o
 
 powershell -ExecutionPolicy Bypass -File tools\inject-scripts.ps1
 tools\update-and-debug.bat
-powershell -ExecutionPolicy Bypass -File tools\package-client.ps1
+powershell -ExecutionPolicy Bypass -File tools\package-client.ps1 -Version 0.1.0-alpha
+powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.0-alpha
 ```
 
 ---
