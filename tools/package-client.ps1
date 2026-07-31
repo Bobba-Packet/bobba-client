@@ -76,6 +76,9 @@ if (Test-Path $PackSrc) {
     Write-Host "Deployed $packName pack"
 }
 
+# Trax Machine external pack (catalog + imgs + mp3s)
+Deploy-TraxPack $DistDir | Out-Null
+
 # Room placeholders (CDN flash-assets are 404 - AirPlus loads these from local_include/)
 $clientAssets = Join-Path $BobbaRoot "client-assets\local_include"
 if (Test-Path (Join-Path $clientAssets "PlaceHolderPet.swf")) {

@@ -42,7 +42,7 @@ if not exist "%DESC%" (
 
 if not exist "%RUNTIME%\" mkdir "%RUNTIME%" >nul 2>&1
 
-echo [1/3] Copying HabboAir_bobba.swf -^> runtime\HabboAir.swf
+echo [1/5] Copying HabboAir_bobba.swf -^> runtime\HabboAir.swf
 copy /Y "%SRC_SWF%" "%DST_SWF%" >nul
 if errorlevel 1 (
   echo ERROR: copy failed
@@ -50,7 +50,7 @@ if errorlevel 1 (
 )
 for %%A in ("%DST_SWF%") do echo       OK %%~zA bytes
 
-echo [2/4] Syncing brand-pack into runtime\
+echo [2/5] Syncing brand-pack into runtime\
 if exist "%PACK%\" (
   if exist "%RUNTIME%\bobba" rd /s /q "%RUNTIME%\bobba"
   xcopy /E /I /Y /Q "%PACK%" "%RUNTIME%\bobba\" >nul
@@ -62,7 +62,21 @@ if exist "%PACK%\" (
   echo       WARN: brand-pack missing - external assets may not load
 )
 
-echo [3/4] Syncing room placeholder SWFs into runtime\local_include\
+echo [3/5] Syncing traxmachine-pack into runtime\
+set "TRAX_PACK=%ROOT%\traxmachine-pack"
+if not exist "%TRAX_PACK%\catalog.json" set "TRAX_PACK=%ROOT%\..\traxmachine\traxmachine-pack"
+if exist "%TRAX_PACK%\catalog.json" (
+  if exist "%RUNTIME%\traxmachine" rd /s /q "%RUNTIME%\traxmachine"
+  xcopy /E /I /Y /Q "%TRAX_PACK%" "%RUNTIME%\traxmachine\" >nul
+  if not exist "%RUNTIME%\local_include" mkdir "%RUNTIME%\local_include"
+  if exist "%RUNTIME%\local_include\traxmachine" rd /s /q "%RUNTIME%\local_include\traxmachine"
+  xcopy /E /I /Y /Q "%TRAX_PACK%" "%RUNTIME%\local_include\traxmachine\" >nul
+  echo       OK runtime\traxmachine + runtime\local_include\traxmachine
+) else (
+  echo       WARN: traxmachine-pack missing - :traxmachine assets will not load
+)
+
+echo [4/5] Syncing room placeholder SWFs into runtime\local_include\
 set "CLIENT_ASSETS=%ROOT%\client-assets\local_include"
 if exist "%CLIENT_ASSETS%\PlaceHolderPet.swf" (
   if not exist "%RUNTIME%\local_include" mkdir "%RUNTIME%\local_include"
@@ -72,7 +86,7 @@ if exist "%CLIENT_ASSETS%\PlaceHolderPet.swf" (
   echo       WARN: client-assets\local_include missing - gordon CDN 404s will break rooms
 )
 
-echo [4/4] Starting ADL debug ^(no -nodebug^)
+echo [5/5] Starting ADL debug ^(no -nodebug^)
 echo       SDK:  %SDK%
 echo       SWF:  %DST_SWF%
 echo       Desc: %DESC%

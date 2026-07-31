@@ -23,12 +23,18 @@
     "helpers": [
       "com/sulake/habbo/window/utils/bobba/BobbaPack.as",
       "com/sulake/habbo/window/utils/bobba/BobbaHelperView.as",
-      "com/sulake/habbo/window/utils/bobba/BobbaHelperEditor.as"
+      "com/sulake/habbo/window/utils/bobba/BobbaHelperEditor.as",
+      "com/sulake/habbo/window/utils/traxmachine/TimelineCell.as",
+      "com/sulake/habbo/window/utils/traxmachine/TraxMachineCatalog.as",
+      "com/sulake/habbo/window/utils/traxmachine/TraxMachineAssets.as",
+      "com/sulake/habbo/window/utils/traxmachine/TraxMachinePlayer.as",
+      "com/sulake/habbo/window/utils/traxmachine/TraxMachineView.as",
+      "com/sulake/habbo/window/utils/traxmachine/TraxMachineEditor.as"
     ]
   },
   "notes": [
     "Do NOT stage IHabboWindowManagerComponent, EventDispatcherWrapper, or Core - FFDec breaks ABC slots.",
-    "Bobba Helper (:bobba) merges Editor/View/Pack into HabboWindowManagerComponent as file-private classes.",
-    "Loading: community photos API + Bobba logo/bar; SSO fades into loading screen."
+    "Bobba Helper (:bobba) and Trax Machine (:traxmachine / :trax) merge into HabboWindowManagerComponent as file-private classes.",
+    "Trax assets deploy from traxmachine-pack/ (local or sibling) to traxmachine/ + local_include/traxmachine/."
   ]
 }

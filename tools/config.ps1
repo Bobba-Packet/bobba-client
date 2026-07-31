@@ -47,3 +47,37 @@ $Script:DistDir = Join-Path $BobbaRoot "dist\airbobba"
 $Script:ManifestPath = Join-Path $BobbaRoot "patches\manifest.json"
 $Script:InjectLog = Join-Path $BobbaRoot "tools\inject-log.txt"
 $Script:DebugDescriptor = Join-Path $PSScriptRoot "HabboAir-debug-app.xml"
+
+function Resolve-TraxPackSrc {
+    $candidates = @(
+        (Join-Path $BobbaRoot "traxmachine-pack"),
+        (Join-Path $BobbaRoot "..\traxmachine\traxmachine-pack")
+    )
+    foreach ($c in $candidates) {
+        $full = [System.IO.Path]::GetFullPath($c)
+        if (Test-Path (Join-Path $full "catalog.json")) { return $full }
+    }
+    return $null
+}
+
+function Deploy-TraxPack([string]$TargetRoot) {
+    $src = Resolve-TraxPackSrc
+    if (-not $src) {
+        Write-Warning "traxmachine-pack missing (looked in repo + ..\traxmachine) - Trax Machine assets will not load"
+        return $false
+    }
+    $targets = @(
+        (Join-Path $TargetRoot "traxmachine"),
+        (Join-Path $TargetRoot "local_include\traxmachine")
+    )
+    foreach ($dst in $targets) {
+        $parent = Split-Path $dst -Parent
+        if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Force -Path $parent | Out-Null }
+        if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
+        Copy-Item $src $dst -Recurse -Force
+        Write-Host "Deployed traxmachine-pack -> $dst"
+    }
+    return $true
+}
+
+$Script:TraxPackSrc = Resolve-TraxPackSrc

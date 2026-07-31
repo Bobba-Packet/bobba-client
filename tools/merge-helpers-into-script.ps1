@@ -59,8 +59,9 @@ function Convert-ToFilePrivateClass([string]$raw) {
 
 $hwm = Get-Content -Path $HwmPath -Raw -Encoding UTF8
 
-# Drop package imports that will become same-file helpers (heuristic: utils.bobba)
+# Drop package imports that will become same-file helpers
 $hwm = $hwm -replace "(?m)^\s*import com\.sulake\.habbo\.window\.utils\.bobba\.\w+;\r?\n", ""
+$hwm = $hwm -replace "(?m)^\s*import com\.sulake\.habbo\.window\.utils\.traxmachine\.\w+;\r?\n", ""
 
 $allImports = New-Object System.Collections.Generic.HashSet[string]
 $helperBodies = New-Object System.Collections.Generic.List[string]
@@ -71,10 +72,10 @@ foreach ($rel in $Helpers) {
     $raw = Get-Content -Path $path -Raw -Encoding UTF8
     $converted = Convert-ToFilePrivateClass $raw
     foreach ($imp in $converted.Imports) {
-        if ($imp -match 'utils\.bobba') { continue }
+        if ($imp -match 'utils\.(bobba|traxmachine)') { continue }
         [void]$allImports.Add($imp)
     }
-    $impText = ($converted.Imports | Where-Object { $_ -notmatch 'utils\.bobba' }) -join "`r`n"
+    $impText = ($converted.Imports | Where-Object { $_ -notmatch 'utils\.(bobba|traxmachine)' }) -join "`r`n"
     if ($impText) {
         $helperBodies.Add($impText + "`r`n" + $converted.Body)
     } else {

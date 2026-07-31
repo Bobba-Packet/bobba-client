@@ -198,21 +198,29 @@ Branding-only Alpha may only need string/asset swaps. Prefer launcher/widgets ov
 ### Debug loop
 
 1. Inject → `HabboAir_bobba.swf`
-2. Copy into `runtime/HabboAir.swf` + sync `brand-pack`
+2. Copy into `runtime/HabboAir.swf` + sync `brand-pack` + `traxmachine-pack`
 3. Run `adl.exe` with `tools/HabboAir-debug-app.xml`, app root = `runtime/`
 4. Stacks: ADL console + optional `Logger` → `applicationStorageDirectory`
 
 AIR SDK: `tools/config.ps1` (default `D:\SDKs\AIR\AIRSDK_51.2.2`). FFDec: local `ffdec/` or sibling Traxmachine.
 
-### Traxmachine reference paths
+### Trax Machine (ported)
+
+Chat `:traxmachine` / `:trax`, or Bobba Helper → Extra → Traxmachine.
+
+| Path | Role |
+|---|---|
+| `cleanswf/scripts/.../utils/traxmachine/` | Trax editor AS3 (merged into HWM) |
+| `..\traxmachine\traxmachine-pack\` | External assets (~57MB) — also `traxmachine-pack/` locally |
+| Deploy targets | `traxmachine/` + `local_include/traxmachine/` next to SWF |
+
+### Traxmachine reference paths (sibling tooling)
 
 | Path | Role |
 |---|---|
 | `traxmachine/tools/inject-traxmachine.ps1` | Original inject |
 | `traxmachine/tools/merge-trax-into-hwm.ps1` | File-private merge |
 | `traxmachine/tools/update-and-debug.bat` | Deploy + ADL |
-| `traxmachine/cleanswf/scripts/.../utils/traxmachine/` | Feature AS3 (do not copy for Alpha) |
-| `traxmachine/traxmachine-pack/` | External pack pattern |
 | `traxmachine/ffdec/` | JPEXS CLI |
 
 **Caution:** re-exporting all scripts from FFDec into `cleanswf/scripts/` overwrites Bobba-owned files (`Logger.as`, `utils/bobba/`). Export to a temp folder or restore helpers from git after a wipe.
@@ -381,8 +389,9 @@ Pattern used for **Bobba Helper** (`:bobba`) and Trax Machine.
 | Editor | `cleanswf/scripts/.../bobba/BobbaHelperEditor.as` |
 | View | `…/bobba/BobbaHelperView.as` |
 | Assets | `…/bobba/BobbaPack.as` |
-| Open API | `HabboWindowManagerComponent.displayBobbaHelper()` |
-| Chat hook | `LilithCustoms` → `:bobba` |
+| Open API | `HabboWindowManagerComponent.displayBobbaHelper()` / `displayTraxMachine()` |
+| Chat hook | `LilithCustoms` → `:bobba` / `:traxmachine` / `:trax` |
+| Trax sources | `cleanswf/scripts/.../traxmachine/*.as` |
 | Layout tweaker | `tools/bobba-helper-tweaker.html` |
 
 ### Architecture
@@ -674,7 +683,7 @@ Session-only (`:rotate`, hide-figure filters, flood state) reset on room change 
 6. After packaging exists, wire launcher `AirBobba` — do not leave “coming soon”.
 7. Prefer **external packs** over baking assets into the SWF.
 8. Never FFDec-reimport interfaces / Core / EventDispatcher wrappers without a known-good reason.
-9. Do not port Trax Machine gameplay into this repo for Alpha.
+9. Keep Trax Machine assets external (`traxmachine-pack`); do not bake MP3s into the SWF.
 
 ### Quick links
 

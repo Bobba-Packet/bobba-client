@@ -49,6 +49,9 @@ if (Test-Path $PackSrc) {
     Write-Warning "brand-pack missing (optional for first inject)"
 }
 
+# Deploy Trax Machine external pack (catalog + imgs + mp3s)
+Deploy-TraxPack $BobbaRoot | Out-Null
+
 # Merge helpers into host (if configured)
 $mergeScript = Join-Path $PSScriptRoot "merge-helpers-into-script.ps1"
 Write-Host "Merging helpers (if any)..."

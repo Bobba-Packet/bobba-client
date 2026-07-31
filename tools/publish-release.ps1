@@ -55,6 +55,19 @@ try {
     New-Item -ItemType Directory -Force -Path (Split-Path $bobbaLocal -Parent) | Out-Null
     Copy-Item $PackSrc $bobbaLocal -Recurse -Force
 
+    if ($TraxPackSrc -and (Test-Path $TraxPackSrc)) {
+        $trax = Join-Path $patchRoot "traxmachine"
+        $traxLocal = Join-Path $patchRoot "local_include\traxmachine"
+        if (Test-Path $trax) { Remove-Item $trax -Recurse -Force }
+        if (Test-Path $traxLocal) { Remove-Item $traxLocal -Recurse -Force }
+        Copy-Item $TraxPackSrc $trax -Recurse -Force
+        New-Item -ItemType Directory -Force -Path (Split-Path $traxLocal -Parent) | Out-Null
+        Copy-Item $TraxPackSrc $traxLocal -Recurse -Force
+        Write-Host "Deployed traxmachine pack into patch"
+    } else {
+        Write-Warning "traxmachine-pack missing - patch will ship without Trax assets"
+    }
+
     $meta = @{
         product = "AirBobba"
         name = "Bobba Client"

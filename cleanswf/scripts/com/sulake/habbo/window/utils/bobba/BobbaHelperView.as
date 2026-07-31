@@ -118,6 +118,8 @@ package com.sulake.habbo.window.utils.bobba
       
       private var _keyByRow:Dictionary;
       
+      private var _actionByRow:Dictionary;
+      
       private var _btnFrames:Dictionary;
       
       private var _btnBmp:Dictionary;
@@ -130,6 +132,7 @@ package com.sulake.habbo.window.utils.bobba
          _controller = controller;
          _boxByRow = new Dictionary();
          _keyByRow = new Dictionary();
+         _actionByRow = new Dictionary();
          _btnFrames = new Dictionary();
          _btnBmp = new Dictionary();
          _btnPressed = new Dictionary();
@@ -152,6 +155,7 @@ package com.sulake.habbo.window.utils.bobba
          _controller = null;
          _boxByRow = null;
          _keyByRow = null;
+         _actionByRow = null;
          _btnFrames = null;
          _btnBmp = null;
          _btnPressed = null;
@@ -495,8 +499,8 @@ package com.sulake.habbo.window.utils.bobba
          addToggleRow("groupwhisper","Sussurro em grupo",COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW);
          addToggleRow("movewallitem","Mover item de parede",COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
          addSectionTitle("Extra",EXTRA_LEFT_X,EXTRA_Y);
-         addActionRow("Traxmachine",EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null);
-         addActionRow("Ver visuais Bobba",COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW,"Bobba");
+         addActionRow("Traxmachine",EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null,"traxmachine");
+         addActionRow("Ver visuais Bobba",COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW,"Bobba",null);
       }
       
       private function addSectionTitle(titleText:String, x:Number, y:Number) : void
@@ -550,9 +554,41 @@ package com.sulake.habbo.window.utils.bobba
          _keyByRow[row] = key;
       }
       
-      private function addActionRow(labelText:String, x:Number, y:Number, greenWord:String) : void
+      private function addActionRow(labelText:String, x:Number, y:Number, greenWord:String, action:String = null) : void
       {
-         makeRow(labelText,x,y,true,greenWord);
+         var row:Sprite = makeRow(labelText,x,y,true,greenWord);
+         if(action != null && action.length > 0)
+         {
+            row.buttonMode = true;
+            row.mouseChildren = false;
+            row.addEventListener(MouseEvent.CLICK,onActionRowClick);
+            _actionByRow[row] = action;
+         }
+      }
+      
+      private function onActionRowClick(e:MouseEvent) : void
+      {
+         var row:Sprite = null;
+         var action:String = null;
+         try
+         {
+            row = e.currentTarget as Sprite;
+            if(row == null || _controller == null || _actionByRow == null)
+            {
+               return;
+            }
+            action = _actionByRow[row] as String;
+            if(action == "traxmachine")
+            {
+               if(_controller.WindowManager != null)
+               {
+                  _controller.WindowManager.displayTraxMachine();
+               }
+            }
+         }
+         catch(errAction:Error)
+         {
+         }
       }
       
       public function refresh() : void

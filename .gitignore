@@ -20,10 +20,16 @@ cleanswf/scripts/**
 !cleanswf/scripts/com/sulake/habbo/window/utils/
 !cleanswf/scripts/com/sulake/habbo/window/utils/bobba/
 !cleanswf/scripts/com/sulake/habbo/window/utils/bobba/**
+!cleanswf/scripts/com/sulake/habbo/window/utils/traxmachine/
+!cleanswf/scripts/com/sulake/habbo/window/utils/traxmachine/**
 
-# Deployed pack copies (source of truth is brand-pack/ + client-assets/)
+# Deployed pack copies (source of truth is brand-pack/ + client-assets/ + sibling traxmachine-pack)
 /bobba/
+/traxmachine/
 /local_include/
+
+# Optional local Trax pack copy (~57MB). Prefer sibling ..\traxmachine\traxmachine-pack.
+/traxmachine-pack/
 
 # Tooling scratch
 tools/inject-staging/
