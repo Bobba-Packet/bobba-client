@@ -80,18 +80,23 @@ try {
 
     $patchZip = Join-Path $outDir "HabboAirBobbaPatch.zip"
     # Prefer Python for forward-slash zip paths (Compress-Archive uses backslashes)
-    $py = @"
-import zipfile, pathlib
-src = pathlib.Path(r'$patchRoot')
-out = pathlib.Path(r'$patchZip')
-with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
-    for p in sorted(src.rglob('*')):
-        if p.is_file():
-            z.write(p, p.relative_to(src).as_posix())
-print(out)
-"@
-    python -c $py
-    if ($LASTEXITCODE -ne 0) { throw "Failed to build HabboAirBobbaPatch.zip" }
+    $zipPy = Join-Path $env:TEMP ("habboairbobba-zip-" + [guid]::NewGuid().ToString("N") + ".py")
+    @(
+        "import zipfile, pathlib"
+        "src = pathlib.Path(r'''$patchRoot''')"
+        "out = pathlib.Path(r'''$patchZip''')"
+        "with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:"
+        "    for p in sorted(src.rglob('*')):"
+        "        if p.is_file():"
+        "            z.write(p, p.relative_to(src).as_posix())"
+        "print(out)"
+    ) | Set-Content -Path $zipPy -Encoding UTF8
+    try {
+        python $zipPy
+        if ($LASTEXITCODE -ne 0) { throw "Failed to build HabboAirBobbaPatch.zip" }
+    } finally {
+        if (Test-Path $zipPy) { Remove-Item $zipPy -Force }
+    }
     Write-Host "Patch asset: $patchZip"
 }
 finally {
@@ -99,32 +104,50 @@ finally {
 }
 
 if ($SkipUpload) {
-    Write-Host "SkipUpload set — assets ready under $outDir"
+    Write-Host "SkipUpload set - assets ready under $outDir"
     exit 0
 }
 
-$notes = @"
-## Bobba Client $Version
-
-Injected HabboAirPlus SWF + external brand pack / room placeholders.
-
-Launcher downloads ``HabboAir.swf`` + ``HabboAirBobbaPatch.zip`` from the ``latest`` tag.
-Install: ``%AppData%\packet.bobba.launcher\downloads\airbobba\{version}\``
-"@
+$notes = @(
+    "## Bobba Client $Version"
+    ""
+    "Injected HabboAirPlus SWF + Trax Machine + external brand pack / room placeholders."
+    ""
+    "Launcher downloads HabboAir.swf + HabboAirBobbaPatch.zip from the latest tag."
+    "Install: %AppData%\packet.bobba.launcher\downloads\airbobba\{version}"
+) -join "`n"
 
 $assets = @($swfAsset, $patchZip)
 $tagVersion = if ($Version.StartsWith("v")) { $Version } else { "v$Version" }
 
 function Publish-ReleaseTag([string]$Tag, [string]$Title, [bool]$AsLatest) {
-    $exists = $false
-    gh release view $Tag -R Bobba-Packet/HabboAirBobba 2>$null | Out-Null
-    if ($LASTEXITCODE -eq 0) { $exists = $true }
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    gh release view $Tag -R Bobba-Packet/bobba-client 2>$null | Out-Null
+    $exists = ($LASTEXITCODE -eq 0)
+    $ErrorActionPreference = $prevEap
     if ($exists) {
         Write-Host "Updating assets on existing release $Tag..."
-        gh release upload $Tag @assets -R Bobba-Packet/HabboAirBobba --clobber
+        & gh release upload $Tag $assets[0] $assets[1] -R Bobba-Packet/bobba-client --clobber
+        if ($LASTEXITCODE -ne 0) { throw "gh release upload failed for $Tag" }
     } else {
-        $latestFlag = if ($AsLatest) { @() } else { @("--latest=false") }
-        gh release create $Tag -R Bobba-Packet/HabboAirBobba --title $Title --notes $notes @latestFlag @assets
+        Write-Host "Creating release $Tag..."
+        $notesFile = Join-Path $env:TEMP ("habboairbobba-notes-" + [guid]::NewGuid().ToString("N") + ".md")
+        Set-Content -Path $notesFile -Value $notes -Encoding UTF8
+        try {
+            $ghArgs = @(
+                "release", "create", $Tag,
+                "-R", "Bobba-Packet/bobba-client",
+                "--title", $Title,
+                "--notes-file", $notesFile,
+                $assets[0], $assets[1]
+            )
+            if (-not $AsLatest) { $ghArgs += "--latest=false" }
+            & gh @ghArgs
+            if ($LASTEXITCODE -ne 0) { throw "gh release create failed for $Tag" }
+        } finally {
+            if (Test-Path $notesFile) { Remove-Item $notesFile -Force }
+        }
     }
 }
 
@@ -132,6 +155,6 @@ Publish-ReleaseTag -Tag "latest" -Title "Bobba Client (latest)" -AsLatest $true
 Publish-ReleaseTag -Tag $tagVersion -Title "Bobba Client $Version" -AsLatest $false
 
 Write-Host ""
-Write-Host "OK: https://github.com/Bobba-Packet/HabboAirBobba/releases/tag/latest"
-Write-Host "    https://github.com/Bobba-Packet/HabboAirBobba/releases/tag/$tagVersion"
+Write-Host "OK: https://github.com/Bobba-Packet/bobba-client/releases/tag/latest"
+Write-Host "    https://github.com/Bobba-Packet/bobba-client/releases/tag/$tagVersion"
 Write-Host "NOTE: repo must be public (or assets mirrored) for the launcher to download anonymously."
