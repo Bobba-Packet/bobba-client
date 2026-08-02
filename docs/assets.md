@@ -30,4 +30,12 @@ Slices of the dark window skin (theme style **200**), cut from `cleanswf/scripts
 
 ## Layout tweakers
 
-Two browser-based helpers live in `tools/`: `bobba-helper-tweaker.html` for the helper window and `polaroid-tweaker.html` for the photo frame. Opened over `file://` they must not call `canvas.toDataURL()` on local images (it taints the canvas) — they clip with CSS instead.
+Browser-based helpers in `tools/` (open the `.html` over `file://` or a local static server). They must not call `canvas.toDataURL()` on local images (it taints the canvas) — they clip with CSS instead.
+
+| Tool | Purpose |
+|---|---|
+| `bobba-helper-tweaker.html` | Bobba Helper (`:bobba`) content layout → AS3 constants for `BobbaHelperView.as` |
+| `bobba-settings-tweaker.html` | Bobba Settings window layout (sidebar + topics from `docs/settings-window-spec.md`) → AS3 constants for a future `BobbaSettingsView` / frame XML |
+| `polaroid-tweaker.html` | Photo splash polaroid slots |
+
+Settings tweaker defaults assume a left sidebar, scrollable content, and an optional search bar. Export includes `VIEW_W`/`VIEW_H` plus the frame size formula (`+12` / `+36` margins).

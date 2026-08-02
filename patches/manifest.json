@@ -14,9 +14,12 @@
     "com/sulake/habbo/toolbar/extensions/PurseAreaExtension.as",
     "com/sulake/habbo/toolbar/HabboToolbar.as",
     "com/sulake/habbo/avatar/AvatarEditorView.as",
+    "com/sulake/habbo/avatar/HabboAvatarEditorManager.as",
     "com/sulake/habbo/window/LilithCustoms.as",
     "com/sulake/habbo/window/HabboWindowManagerComponent.as",
-    "com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as"
+    "com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as",
+    "com/sulake/habbo/friendbar/view/HabboFriendBarView.as",
+    "com/sulake/habbo/catalog/habbicons/HabbiconController.as"
   ],
   "merge": {
     "host": "com/sulake/habbo/window/HabboWindowManagerComponent.as",
@@ -34,6 +37,7 @@
   },
   "notes": [
     "Do NOT stage IHabboWindowManagerComponent, EventDispatcherWrapper, or Core - FFDec breaks ABC slots.",
+    "Do NOT stage HabboAvatarEditor.as - FFDec mangles partSet?.clubLevel sort comparators and breaks the editor (#1009).",
     "Bobba Helper (:bobba) and Trax Machine (:traxmachine / :trax) merge into HabboWindowManagerComponent as file-private classes.",
     "Trax assets deploy from traxmachine-pack/ (local or sibling) to traxmachine/ + local_include/traxmachine/."
   ]

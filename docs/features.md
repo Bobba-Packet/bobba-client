@@ -34,7 +34,7 @@ Also reachable from Bobba Helper → Extra. An in-client song editor: browse sou
 
 ## Avatar editor Clothes button
 
-An extra toggle in the avatar editor that swaps the nickname bar for a Bobba hero graphic.
+Opens a separate **Bobba Clothes** avatar editor (unlocked wardrobe, instance 3) with `bobba_clothes_hero.png` behind the nickname. Visibility is gated by **Ver visuais Bobba** in `:bobba` (`BobbaLooksEnabled`); when that toggle is off, DevWar is also disabled. Closing the editor disposes wardrobe data from RAM and keeps only the look the user saved. Disabling the toggle reverts the avatar to its original clothing.
 
 ## Local room assets
 

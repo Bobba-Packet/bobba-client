@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bobba Settings Layout Tweaker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0e1014;
+    --panel: #181c28;
+    --fg: #e8eaef;
+    --muted: #9aa3b5;
+    --accent: #31a342;
+    --line: #2c3348;
+    --danger: #c44;
+    --warn: #c90;
+    --stub: #6a7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 13px/1.4 "Ubuntu", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 12px;
+    padding: 12px;
+    min-height: 100vh;
+  }
+  .stage-wrap {
+    background: #14161e;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    overflow: auto;
+  }
+  .chrome {
+    background: #000;
+    border: 1px solid #6a6a6a;
+    box-shadow: 0 8px 28px rgba(0,0,0,.45);
+    user-select: none;
+  }
+  .chrome-title {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #111;
+    border-bottom: 1px solid #333;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+  }
+  .chrome-x {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    background: #333;
+    border: 1px solid #666;
+    color: #ccc;
+    font-size: 11px;
+    line-height: 14px;
+    text-align: center;
+  }
+  #stage {
+    position: relative;
+    background: #0a0a0a;
+    overflow: hidden;
+    image-rendering: pixelated;
+    display: flex;
+    flex-direction: column;
+  }
+  .hint { color: var(--muted); font-size: 12px; align-self: stretch; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+  }
+  h1 { font-size: 15px; margin: 0; }
+  h2 {
+    font-size: 11px;
+    margin: 10px 0 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+  h2:first-of-type { border-top: 0; padding-top: 0; }
+  label.ctrl {
+    display: grid;
+    grid-template-columns: 110px 1fr 58px;
+    gap: 6px;
+    align-items: center;
+    margin: 1px 0;
+  }
+  label.ctrl span { color: var(--muted); font-size: 12px; }
+  input[type=range] { width: 100%; }
+  input[type=number] {
+    width: 58px;
+    background: #10131c;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 3px 4px;
+  }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .row button {
+    background: #252b3d;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 7px 10px;
+    cursor: pointer;
+  }
+  .row button.primary {
+    background: var(--accent);
+    color: #111;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .row button.warn { background: #3a2a18; border-color: #6a4a28; }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 4px 0;
+  }
+  .tabs button {
+    flex: 1;
+    min-width: 64px;
+    background: #252b3d;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  .tabs button.active {
+    background: var(--accent);
+    color: #111;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  textarea {
+    width: 100%;
+    min-height: 200px;
+    background: #10131c;
+    color: #d7dde8;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px;
+    font: 11px/1.35 ui-monospace, Consolas, monospace;
+    resize: vertical;
+  }
+  .status { color: var(--muted); font-size: 11px; min-height: 16px; }
+  .chk {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 2px 0;
+  }
+
+  /* —— in-stage chrome —— */
+  .s-top {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    border-bottom: 1px solid #2a2a2a;
+    background: #121212;
+  }
+  .s-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .s-search {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+    color: #888;
+    font: 11px "Ubuntu", sans-serif;
+    padding: 4px 8px;
+    outline: none;
+  }
+  .s-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .s-sidebar {
+    flex-shrink: 0;
+    background: #101010;
+    border-right: 1px solid #2a2a2a;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .s-nav {
+    border: 0;
+    background: transparent;
+    color: #c8c8c8;
+    text-align: left;
+    font: 700 12px "Ubuntu", sans-serif;
+    cursor: pointer;
+    width: 100%;
+    border-left: 3px solid transparent;
+  }
+  .s-nav:hover { background: #1a1a1a; color: #fff; }
+  .s-nav.active {
+    background: #1e1e1e;
+    color: #fff;
+    border-left-color: #31a342;
+  }
+  .s-nav .count {
+    font-weight: 400;
+    color: #666;
+    font-size: 10px;
+    float: right;
+  }
+  .s-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #0d0d0d;
+    position: relative;
+  }
+  .s-topic { }
+  .s-topic-title {
+    font: 700 13px "Ubuntu", sans-serif;
+    color: #fff;
+  }
+  .s-topic-hint {
+    font: 10px "Ubuntu", sans-serif;
+    color: #6e6e6e;
+  }
+  .s-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 2px;
+  }
+  .s-row.disabled { opacity: 0.38; }
+  .s-row .label {
+    flex: 1;
+    min-width: 0;
+    font: 12px "Ubuntu", sans-serif;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .s-row .badge {
+    font: 9px/1 "Ubuntu", sans-serif;
+    padding: 2px 4px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .s-row .badge.session { background: #3a2a10; color: #e0a040; }
+  .s-row .badge.stub { background: #1a2a1a; color: #6ab06a; }
+  .s-row .badge.server { background: #1a1a2a; color: #8080c0; }
+  .s-ctrl {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .fake-toggle {
+    width: 18px;
+    height: 18px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+  }
+  .fake-slider {
+    height: 6px;
+    background: #2a2a2a;
+    border-radius: 2px;
+    position: relative;
+  }
+  .fake-slider::after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    top: -4px;
+    width: 10px;
+    height: 14px;
+    background: #31a342;
+    border-radius: 2px;
+  }
+  .fake-slider .val {
+    position: absolute;
+    right: -36px;
+    top: -6px;
+    font: 10px "Ubuntu", sans-serif;
+    color: #888;
+    width: 32px;
+  }
+  .fake-seg {
+    display: flex;
+    border: 1px solid #333;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .fake-seg span {
+    font: 9px "Ubuntu", sans-serif;
+    padding: 3px 6px;
+    color: #888;
+    background: #1a1a1a;
+    border-right: 1px solid #333;
+  }
+  .fake-seg span:last-child { border-right: 0; }
+  .fake-seg span.on { background: #31a342; color: #111; font-weight: 700; }
+  .fake-drop, .fake-input, .fake-step, .fake-color, .fake-btn, .fake-list, .fake-key {
+    font: 10px "Ubuntu", sans-serif;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 2px;
+    color: #aaa;
+    padding: 3px 6px;
+    white-space: nowrap;
+  }
+  .fake-color {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .fake-color i {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: block;
+    border: 1px solid #555;
+  }
+  .fake-btn {
+    background: #252525;
+    color: #ddd;
+    cursor: default;
+  }
+  .fake-btn.danger { border-color: #633; color: #e88; }
+  .guides {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .guide-line {
+    position: absolute;
+    background: rgba(49,163,66,.3);
+  }
+  .guide-line.v { width: 1px; top: 0; bottom: 0; }
+  .guide-line.h { height: 1px; left: 0; right: 0; }
+  .meta {
+    color: var(--muted);
+    font-size: 11px;
+    align-self: stretch;
+  }
+  .meta strong { color: var(--fg); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage-wrap">
+    <div class="chrome" id="chrome">
+      <div class="chrome-title">Configurações Bobba<span class="chrome-x">×</span></div>
+      <div id="stage"></div>
+    </div>
+    <div class="meta" id="meta"></div>
+    <div class="hint">
+      Layout preview for the Bobba Settings window (content from
+      <code>docs/settings-window-spec.md</code>). Pick sidebar navigation, row density, and chrome
+      sizes — export AS3 constants for <code>BobbaSettingsView</code> / frame XML when ready.
+      Opened over <code>file://</code>; assets clip with CSS (no canvas export).
+    </div>
+  </div>
+  <div class="panel">
+    <h1>Bobba Settings tweaker</h1>
+    <div class="status" id="status">Loading…</div>
+
+    <h2>Preview category</h2>
+    <div class="tabs" id="catTabs"></div>
+
+    <h2>Window / chrome</h2>
+    <div id="g-window"></div>
+
+    <h2>Top bar (search)</h2>
+    <div id="g-top"></div>
+    <label class="chk"><input type="checkbox" id="showSearch" checked /> Show search field</label>
+
+    <h2>Sidebar</h2>
+    <div id="g-sidebar"></div>
+
+    <h2>Content / rows</h2>
+    <div id="g-content"></div>
+    <label class="chk"><input type="checkbox" id="showBadges" checked /> Show status badges (Session / Stub / Server)</label>
+    <label class="chk"><input type="checkbox" id="showDisabled" checked /> Preview dependent-disabled rows</label>
+    <label class="chk"><input type="checkbox" id="showGuides" /> Show guide lines</label>
+    <label class="chk"><input type="checkbox" id="hideStubs" /> Hide Stub rows</label>
+
+    <div class="row">
+      <button class="primary" id="btnExport">Export AS3</button>
+      <button id="btnCopy">Copy</button>
+      <button id="btnApply">Load export</button>
+      <button class="warn" id="btnReset">Reset</button>
+    </div>
+    <textarea id="out" spellcheck="false"></textarea>
+  </div>
+</div>
+<script src="bobba-settings-tweaker.js"></script>
+</body>
+</html>

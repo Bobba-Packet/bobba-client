@@ -7,37 +7,38 @@
     settings: "./bobba-helper-tweaker-assets/bobba-settings-btn.png",
   };
 
+  // Defaults match cleanswf/.../bobba/BobbaHelperView.as layout constants.
   const DEFAULTS = {
-    VIEW_W: 450,
-    VIEW_H: 460,
-    LOGO_X: 22,
+    VIEW_W: 378,
+    VIEW_H: 394,
+    LOGO_X: 27,
     LOGO_Y: 16,
     LOGO_SCALE: 1,
-    TEXT_X: 164,
+    TEXT_X: 177,
     TEXT_RIGHT_PAD: 14,
-    HEADLINE_Y: 34,
+    HEADLINE_Y: 27,
     HEADLINE_SIZE: 15,
-    SUBTITLE_SIZE: 11,
-    VERSION_SIZE: 11,
-    SUBTITLE_GAP: 4,
-    VERSION_GAP: 12,
+    SUBTITLE_SIZE: 12,
+    VERSION_SIZE: 10,
+    SUBTITLE_GAP: 3,
+    VERSION_GAP: 4,
     CHECK_SCALE: 1,
-    CHECK_LABEL_GAP: 5,
+    CHECK_LABEL_GAP: 4,
     COL_LEFT_X: 22,
-    COL_RIGHT_X: 230,
+    COL_RIGHT_X: 199,
     EXTRA_LEFT_X: 70,
-    COL_WIDTH: 196,
+    COL_WIDTH: 195,
     OPTION_SIZE: 12,
     TITLE_SIZE: 13,
     TITLE_TO_ROW: 22,
     ROW_SPACING: 24,
-    SECTION1_Y: 140,
-    SECTION2_Y: 228,
-    EXTRA_Y: 320,
-    BUTTON_Y: 398,
+    SECTION1_Y: 128,
+    SECTION2_Y: 203,
+    EXTRA_Y: 298,
+    BUTTON_Y: 352,
     DISCORD_X: 70,
-    SETTINGS_X: 230,
-    FLOWER_X: 6,
+    SETTINGS_X: 199,
+    FLOWER_X: 15,
     FLOWER_SCALE: 1,
   };
 
@@ -318,7 +319,7 @@
       textNode("Versão 0.1.0", s.TEXT_X, verY, s.VERSION_SIZE, "#6e6e6e", false, copyW)
     );
 
-    // sections
+    // sections — mirrors BobbaHelperView.buildSections()
     addTitle(stage, "Funções de usuário", s.COL_LEFT_X, s.SECTION1_Y);
     addToggle(stage, "Anti AFK", s.COL_LEFT_X, s.SECTION1_Y + s.TITLE_TO_ROW, true);
     addToggle(stage, "Auto drop", s.COL_LEFT_X, s.SECTION1_Y + s.TITLE_TO_ROW + s.ROW_SPACING, false);
@@ -327,12 +328,13 @@
     addTitle(stage, "Qualidade de vida", s.COL_LEFT_X, s.SECTION2_Y);
     addToggle(stage, "Chat em grupo", s.COL_LEFT_X, s.SECTION2_Y + s.TITLE_TO_ROW, true);
     addToggle(stage, "Desativar 67", s.COL_LEFT_X, s.SECTION2_Y + s.TITLE_TO_ROW + s.ROW_SPACING, true);
+    addToggle(stage, "Desativar Habbicons", s.COL_LEFT_X, s.SECTION2_Y + s.TITLE_TO_ROW + s.ROW_SPACING * 2, false);
     addToggle(stage, "Sussurro em grupo", s.COL_RIGHT_X, s.SECTION2_Y + s.TITLE_TO_ROW, true);
     addToggle(stage, "Mover item de parede", s.COL_RIGHT_X, s.SECTION2_Y + s.TITLE_TO_ROW + s.ROW_SPACING, true);
 
     addTitle(stage, "Extra", s.EXTRA_LEFT_X, s.EXTRA_Y);
     addToggle(stage, "Traxmachine", s.EXTRA_LEFT_X, s.EXTRA_Y + s.TITLE_TO_ROW, true);
-    addToggle(stage, "Ver visuais Bobba", s.COL_RIGHT_X, s.EXTRA_Y + s.TITLE_TO_ROW, true, "Bobba");
+    addToggle(stage, "Ver visuais Bobba", s.COL_RIGHT_X, s.EXTRA_Y + s.TITLE_TO_ROW, true);
 
     // buttons
     if (imgs.discord) {
@@ -386,8 +388,14 @@
   }
 
   function exportAs3(writeStatus) {
+    const frameW = state.VIEW_W + 12;
+    const frameH = state.VIEW_H + 36;
     const lines = [
-      "// BobbaHelperView layout — paste into constants (and wire headline fields if still hardcoded)",
+      "// BobbaHelperView layout — paste into constants block",
+      "// Keep BobbaHelperEditor.as frame/canvas XML in sync:",
+      `//   layout/frame width="${frameW}" height="${frameH}"`,
+      `//   canvas width="${state.VIEW_W}" height="${state.VIEW_H}"`,
+      "",
       `public static const VIEW_W:int = ${state.VIEW_W};`,
       `public static const VIEW_H:int = ${state.VIEW_H};`,
       "",
@@ -398,6 +406,12 @@
       `private static const LOGO_Y:Number = ${state.LOGO_Y};`,
       `private static const TEXT_X:Number = ${state.TEXT_X};`,
       `private static const TEXT_RIGHT_PAD:Number = ${state.TEXT_RIGHT_PAD};`,
+      `private static const HEADLINE_Y:Number = ${state.HEADLINE_Y};`,
+      `private static const HEADLINE_SIZE:int = ${state.HEADLINE_SIZE};`,
+      `private static const SUBTITLE_SIZE:int = ${state.SUBTITLE_SIZE};`,
+      `private static const VERSION_SIZE:int = ${state.VERSION_SIZE};`,
+      `private static const SUBTITLE_GAP:Number = ${state.SUBTITLE_GAP};`,
+      `private static const VERSION_GAP:Number = ${state.VERSION_GAP};`,
       `private static const CHECK_LABEL_GAP:Number = ${state.CHECK_LABEL_GAP};`,
       `private static const COL_LEFT_X:Number = ${state.COL_LEFT_X};`,
       `private static const COL_RIGHT_X:Number = ${state.COL_RIGHT_X};`,
@@ -414,14 +428,6 @@
       `private static const DISCORD_X:Number = ${state.DISCORD_X};`,
       `private static const SETTINGS_X:Number = ${state.SETTINGS_X};`,
       `private static const FLOWER_X:Number = ${state.FLOWER_X};`,
-      "",
-      `// header copy (currently partly hardcoded in buildCopy)`,
-      `private static const HEADLINE_Y:Number = ${state.HEADLINE_Y};`,
-      `private static const HEADLINE_SIZE:int = ${state.HEADLINE_SIZE};`,
-      `private static const SUBTITLE_SIZE:int = ${state.SUBTITLE_SIZE};`,
-      `private static const VERSION_SIZE:int = ${state.VERSION_SIZE};`,
-      `private static const SUBTITLE_GAP:Number = ${state.SUBTITLE_GAP};`,
-      `private static const VERSION_GAP:Number = ${state.VERSION_GAP};`,
       "",
       "// JSON snapshot",
       "/*",

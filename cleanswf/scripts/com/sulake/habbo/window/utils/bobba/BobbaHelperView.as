@@ -88,11 +88,11 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const ROW_SPACING:Number = 24;
       
-      private static const SECTION1_Y:Number = 142;
+      private static const SECTION1_Y:Number = 128;
       
-      private static const SECTION2_Y:Number = 222;
+      private static const SECTION2_Y:Number = 203;
       
-      private static const EXTRA_Y:Number = 300;
+      private static const EXTRA_Y:Number = 298;
       
       private static const BUTTON_Y:Number = 352;
       
@@ -496,11 +496,12 @@ package com.sulake.habbo.window.utils.bobba
          addSectionTitle("Qualidade de vida",COL_LEFT_X,SECTION2_Y);
          addToggleRow("groupchat","Chat em grupo",COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW);
          addToggleRow("disable67","Desativar 67",COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
+         addToggleRow("disablehabbicons","Desativar Habbicons",COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING * 2);
          addToggleRow("groupwhisper","Sussurro em grupo",COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW);
          addToggleRow("movewallitem","Mover item de parede",COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
          addSectionTitle("Extra",EXTRA_LEFT_X,EXTRA_Y);
          addActionRow("Traxmachine",EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null,"traxmachine");
-         addActionRow("Ver visuais Bobba",COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW,"Bobba",null);
+         addToggleRow("bobbalooks","Ver visuais Bobba",COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW);
       }
       
       private function addSectionTitle(titleText:String, x:Number, y:Number) : void
