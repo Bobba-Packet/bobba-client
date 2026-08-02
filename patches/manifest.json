@@ -19,12 +19,23 @@
     "com/sulake/habbo/window/HabboWindowManagerComponent.as",
     "com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as",
     "com/sulake/habbo/friendbar/view/HabboFriendBarView.as",
-    "com/sulake/habbo/catalog/habbicons/HabbiconController.as"
+    "com/sulake/habbo/catalog/habbicons/HabbiconController.as",
+    "com/sulake/habbo/inventory/furni/FurniGridView.as"
   ],
   "merge": {
     "host": "com/sulake/habbo/window/HabboWindowManagerComponent.as",
     "helpers": [
       "com/sulake/habbo/window/utils/bobba/BobbaPack.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaCrypto.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaWireCodec.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaBackendClient.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaGroupChatController.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaHabboXml.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaGroupListEditor.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaGroupChatEditor.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaGroupInviteEditor.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaGroupInviteConfirmEditor.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaGroupMembersEditor.as",
       "com/sulake/habbo/window/utils/bobba/BobbaHelperView.as",
       "com/sulake/habbo/window/utils/bobba/BobbaHelperEditor.as",
       "com/sulake/habbo/window/utils/traxmachine/TimelineCell.as",

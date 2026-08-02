@@ -34,6 +34,7 @@ cleanswf/scripts/**
 # Tooling scratch
 tools/inject-staging/
 tools/inject-log.txt
+tools/_ffdec_extract_help/
 
 # ADL / package outputs
 runtime/**

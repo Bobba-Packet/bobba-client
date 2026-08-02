@@ -22,6 +22,10 @@ package com.sulake.habbo.window.utils.bobba
       
       private var _view:BobbaHelperView;
       
+      private var _lastBackendStatus:String = "disconnected";
+      
+      private var _lastBackendDetail:String = "";
+      
       public function BobbaHelperEditor(windowManager:HabboWindowManagerComponent)
       {
          super();
@@ -56,6 +60,16 @@ package com.sulake.habbo.window.utils.bobba
          {
             _window.visible = false;
             removeRoomMouseBlockRect();
+         }
+      }
+      
+      public function setBackendStatus(status:String, detail:String = "") : void
+      {
+         _lastBackendStatus = status != null ? status : "disconnected";
+         _lastBackendDetail = detail != null ? detail : "";
+         if(_view != null)
+         {
+            _view.setBackendStatus(_lastBackendStatus,_lastBackendDetail);
          }
       }
       
@@ -133,6 +147,7 @@ package com.sulake.habbo.window.utils.bobba
             _canvas.setParamFlag(257,false);
             _canvas.setParamFlag(32768,false);
             _view = new BobbaHelperView(_windowManager.LilithCustomsInstance);
+            _view.setBackendStatus(_lastBackendStatus,_lastBackendDetail);
             _canvas.setDisplayObject(_view);
             _window.visible = true;
             _window.activate();

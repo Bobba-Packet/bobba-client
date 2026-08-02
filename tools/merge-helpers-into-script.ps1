@@ -53,7 +53,8 @@ function Convert-ToFilePrivateClass([string]$raw) {
     $inner = $m.Groups[1].Value
     $imports = [regex]::Matches($inner, '(?m)^\s*import\s+[\w\.\*]+;') | ForEach-Object { $_.Value.Trim() }
     $body = [regex]::Replace($inner, '(?m)^\s*import\s+[\w\.\*]+;\r?\n', '')
-    $body = [regex]::Replace($body.Trim(), '^public\s+class\s+', 'class ')
+    # Strip public from the helper class even when comments precede the declaration.
+    $body = [regex]::Replace($body.Trim(), '(?m)^\s*public\s+class\s+', 'class ')
     return @{ Imports = $imports; Body = $body }
 }
 

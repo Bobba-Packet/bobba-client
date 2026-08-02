@@ -108,6 +108,20 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const STATE_CLICK:int = 2;
       
+      private static const STATUS_TAG_PAD_X:Number = 8;
+      
+      private static const STATUS_TAG_PAD_Y:Number = 3;
+      
+      private static const STATUS_DOT:Number = 6;
+      
+      private static const COLOR_ONLINE:uint = 0x31A342;
+      
+      private static const COLOR_OFFLINE:uint = 0x6E6E6E;
+      
+      private static const COLOR_BUSY:uint = 0xC9A227;
+      
+      private static const COLOR_ERROR:uint = 0xC0392B;
+      
       private var _controller:*;
       
       private var _checkOff:BitmapData;
@@ -125,6 +139,16 @@ package com.sulake.habbo.window.utils.bobba
       private var _btnBmp:Dictionary;
       
       private var _btnPressed:Dictionary;
+      
+      private var _statusTag:Sprite;
+      
+      private var _statusDot:Sprite;
+      
+      private var _statusLabel:TextField;
+      
+      private var _backendStatus:String = "disconnected";
+      
+      private var _backendDetail:String = "";
       
       public function BobbaHelperView(controller:*)
       {
@@ -146,6 +170,13 @@ package com.sulake.habbo.window.utils.bobba
          loadFlower();
       }
       
+      public function setBackendStatus(status:String, detail:String = "") : void
+      {
+         _backendStatus = status != null ? status : "disconnected";
+         _backendDetail = detail != null ? detail : "";
+         redrawStatusTag();
+      }
+      
       public function dispose() : void
       {
          while(numChildren > 0)
@@ -161,6 +192,9 @@ package com.sulake.habbo.window.utils.bobba
          _btnPressed = null;
          _checkOff = null;
          _checkOn = null;
+         _statusTag = null;
+         _statusDot = null;
+         _statusLabel = null;
       }
       
       private function drawBackground() : void
@@ -182,9 +216,75 @@ package com.sulake.habbo.window.utils.bobba
          subtitle.y = Math.round(headline.y + headline.height + SUBTITLE_GAP);
          addChild(subtitle);
          var versionField:TextField = createText("Versão 0.1.0",VERSION_SIZE,0x6E6E6E,false,copyWidth);
+         versionField.multiline = false;
+         versionField.wordWrap = false;
+         versionField.autoSize = TextFieldAutoSize.LEFT;
+         versionField.width = versionField.textWidth + 8;
          versionField.x = TEXT_X;
          versionField.y = Math.round(subtitle.y + subtitle.height + VERSION_GAP);
          addChild(versionField);
+         buildStatusTag(Math.round(versionField.x + versionField.width + 8),versionField.y - 1);
+         setBackendStatus(_backendStatus,_backendDetail);
+      }
+      
+      private function buildStatusTag(x:Number, y:Number) : void
+      {
+         _statusTag = new Sprite();
+         _statusTag.x = Math.round(x);
+         _statusTag.y = Math.round(y);
+         _statusTag.mouseEnabled = false;
+         _statusTag.mouseChildren = false;
+         _statusDot = new Sprite();
+         _statusDot.x = STATUS_TAG_PAD_X;
+         _statusDot.y = STATUS_TAG_PAD_Y + 3;
+         _statusTag.addChild(_statusDot);
+         _statusLabel = createText("Offline",VERSION_SIZE,0xEAE6E5,true,80);
+         _statusLabel.x = STATUS_TAG_PAD_X + STATUS_DOT + 5;
+         _statusLabel.y = STATUS_TAG_PAD_Y - 1;
+         _statusTag.addChild(_statusLabel);
+         addChild(_statusTag);
+      }
+      
+      private function redrawStatusTag() : void
+      {
+         var color:uint = COLOR_OFFLINE;
+         var label:String = "Offline";
+         var tagW:Number = 0;
+         var tagH:Number = 0;
+         if(_statusTag == null || _statusLabel == null || _statusDot == null)
+         {
+            return;
+         }
+         if(_backendStatus == "connected")
+         {
+            color = COLOR_ONLINE;
+            label = "Online";
+         }
+         else if(_backendStatus == "connecting" || _backendStatus == "handshake")
+         {
+            color = COLOR_BUSY;
+            label = "Offline";
+         }
+         else
+         {
+            color = COLOR_OFFLINE;
+            label = "Offline";
+         }
+         _statusLabel.textColor = 0xEAE6E5;
+         _statusLabel.text = label;
+         _statusLabel.width = _statusLabel.textWidth + 4;
+         _statusLabel.height = _statusLabel.textHeight + 4;
+         _statusDot.graphics.clear();
+         _statusDot.graphics.beginFill(color,1);
+         _statusDot.graphics.drawCircle(STATUS_DOT * 0.5,STATUS_DOT * 0.5,STATUS_DOT * 0.5);
+         _statusDot.graphics.endFill();
+         tagW = Math.ceil(_statusLabel.x + _statusLabel.width + STATUS_TAG_PAD_X);
+         tagH = Math.ceil(Math.max(STATUS_DOT + STATUS_TAG_PAD_Y * 2,_statusLabel.height + STATUS_TAG_PAD_Y));
+         _statusTag.graphics.clear();
+         _statusTag.graphics.beginFill(color,0.22);
+         _statusTag.graphics.lineStyle(1,color,0.9);
+         _statusTag.graphics.drawRoundRect(0,0,tagW,tagH,8,8);
+         _statusTag.graphics.endFill();
       }
       
       private function loadButtons() : void
@@ -600,6 +700,7 @@ package com.sulake.habbo.window.utils.bobba
          var selected:Boolean = false;
          if(_keyByRow == null || _controller == null)
          {
+            redrawStatusTag();
             return;
          }
          for(rowKey in _keyByRow)
@@ -612,6 +713,7 @@ package com.sulake.habbo.window.utils.bobba
                box.bitmapData = selected ? _checkOn : _checkOff;
             }
          }
+         redrawStatusTag();
       }
       
       private function onRowClick(e:MouseEvent) : void
