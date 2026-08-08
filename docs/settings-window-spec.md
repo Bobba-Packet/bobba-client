@@ -222,6 +222,7 @@ sliders or a picker that converts.
 | Usar mobi com um clique | Toggle | Off | — | **Session** | `UseFurniOnSingleClickEnabled` |
 | Mover item de parede | Toggle | Off | — | Ready | `BobbaMoveWallItemEnabled` |
 | Auto drop | Toggle | Off | — | Ready | `AutoDropEnabled` |
+| Manter direção | Toggle | Off | — | Ready | `MaintainDirectionEnabled` |
 | Autoclique | Toggle | Off | — | **Session** | `ObjectHighlighterEnabled` |
 | Intervalo do autoclique | Stepper | `200` ms | Suggest `50`–`5000` | **Session** | `AutoClickTimer.delay` |
 

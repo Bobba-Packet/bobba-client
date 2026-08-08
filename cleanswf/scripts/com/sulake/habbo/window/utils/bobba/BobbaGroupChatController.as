@@ -1,5 +1,6 @@
-package com.sulake.habbo.window.utils.bobba
+   package com.sulake.habbo.window.utils.bobba
 {
+   import com.sulake.habbo.communication.messages.outgoing.users.GetExtendedProfileByNameMessageComposer;
    import com.sulake.habbo.window.HabboWindowManagerComponent;
    
    public class BobbaGroupChatController
@@ -96,6 +97,55 @@ package com.sulake.habbo.window.utils.bobba
          }
       }
       
+      public function isAnyOpen() : Boolean
+      {
+         if(_listEditor != null && _listEditor.visible)
+         {
+            return true;
+         }
+         if(_chatEditor != null && _chatEditor.visible)
+         {
+            return true;
+         }
+         if(_inviteEditor != null && _inviteEditor.visible)
+         {
+            return true;
+         }
+         if(_confirmEditor != null && _confirmEditor.visible)
+         {
+            return true;
+         }
+         if(_membersEditor != null && _membersEditor.visible)
+         {
+            return true;
+         }
+         return false;
+      }
+      
+      public function closeAll() : void
+      {
+         if(_listEditor != null)
+         {
+            _listEditor.visible = false;
+         }
+         if(_chatEditor != null)
+         {
+            _chatEditor.visible = false;
+         }
+         if(_inviteEditor != null)
+         {
+            _inviteEditor.visible = false;
+         }
+         if(_confirmEditor != null)
+         {
+            _confirmEditor.visible = false;
+         }
+         if(_membersEditor != null)
+         {
+            _membersEditor.visible = false;
+         }
+      }
+      
       public function refreshList() : void
       {
          if(_listEditor != null)
@@ -118,6 +168,7 @@ package com.sulake.habbo.window.utils.bobba
          _activeGroupId = groupId;
          _activeGroupName = groupName;
          _activeMembers = [];
+         clearUnread(groupId);
          if(_chatEditor == null)
          {
             _chatEditor = new BobbaGroupChatEditor(_windowManager,this);
@@ -128,6 +179,8 @@ package com.sulake.habbo.window.utils.bobba
          {
             _backend.openGroup(groupId);
          }
+         syncBarUnread();
+         refreshList();
       }
       
       public function openCreate() : void
@@ -148,7 +201,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          if(groupId == null || groupId.length == 0)
          {
-            showError("Abra um grupo primeiro");
+            showError(BobbaI18n.t("group.error.open_group_first"));
             return;
          }
          if(_inviteEditor == null)
@@ -167,7 +220,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          if(groupId == null || groupId.length == 0)
          {
-            showError("Abra um grupo primeiro");
+            showError(BobbaI18n.t("group.error.open_group_first"));
             return;
          }
          if(_membersEditor == null)
@@ -179,6 +232,25 @@ package com.sulake.habbo.window.utils.bobba
          if(_backend != null)
          {
             _backend.listGroupMembers(groupId);
+         }
+      }
+      
+      public function openUserProfile(nickname:String) : void
+      {
+         if(nickname == null || nickname.length == 0 || _windowManager == null)
+         {
+            return;
+         }
+         try
+         {
+            if(_windowManager.communication != null && _windowManager.communication.connection != null)
+            {
+               _windowManager.communication.connection.send(new GetExtendedProfileByNameMessageComposer(nickname));
+            }
+         }
+         catch(err:Error)
+         {
+            Logger.log("[BobbaGroupChat] openUserProfile failed",err.message);
          }
       }
       
@@ -223,7 +295,7 @@ package com.sulake.habbo.window.utils.bobba
       {
          if(_pendingInvites == null || _pendingInvites.length == 0)
          {
-            showError("Nenhum convite pendente");
+            showError(BobbaI18n.t("group.error.no_pending_invites"));
             return;
          }
          var first:Object = _pendingInvites[0];
@@ -244,7 +316,7 @@ package com.sulake.habbo.window.utils.bobba
       {
          if(_windowManager != null)
          {
-            _windowManager.simpleAlert("Chat em grupo","Aviso",message);
+            _windowManager.simpleAlert(BobbaI18n.t("group.title"),BobbaI18n.t("group.alert.warning"),message);
          }
       }
       
@@ -268,7 +340,12 @@ package com.sulake.habbo.window.utils.bobba
       public function onGroupsList(groups:Array) : void
       {
          _groups = groups != null ? groups : [];
+         if(_activeGroupId != null && _activeGroupId.length > 0 && _chatEditor != null && _chatEditor.visible)
+         {
+            clearUnread(_activeGroupId);
+         }
          refreshList();
+         syncBarUnread();
       }
       
       public function onInviteNotify(inviteId:String, groupId:String, groupName:String, fromNickname:String) : void
@@ -299,13 +376,34 @@ package com.sulake.habbo.window.utils.bobba
       
       public function onGroupMessage(groupId:String, messageId:String, senderNickname:String, senderFigure:String, body:String, timestamp:int) : void
       {
-         if(_chatEditor != null && _activeGroupId == groupId)
+         var viewing:Boolean = false;
+         var own:Boolean = false;
+         var systemMsg:Boolean = false;
+         viewing = _chatEditor != null && _chatEditor.visible && _activeGroupId == groupId;
+         own = isOwnNickname(senderNickname);
+         systemMsg = isSystemBody(body);
+         if(viewing)
          {
             if(senderFigure != null && senderFigure.length > 0)
             {
                _chatEditor.rememberFigure(senderNickname,senderFigure);
             }
-            _chatEditor.appendMessage(senderNickname,body,timestamp,senderFigure);
+            _chatEditor.appendChatOrSystem(senderNickname,body,timestamp,senderFigure);
+            if(!own && _backend != null)
+            {
+               _backend.markGroupRead(groupId);
+            }
+            clearUnread(groupId);
+            syncBarUnread();
+            refreshList();
+            return;
+         }
+         if(!own && !systemMsg)
+         {
+            bumpUnread(groupId);
+            playIncomingSound();
+            refreshList();
+            syncBarUnread();
          }
       }
       
@@ -354,7 +452,21 @@ package com.sulake.habbo.window.utils.bobba
          {
             _backend.listGroups();
          }
-         showError(deleted ? "Você saiu e o grupo foi encerrado." : "Você saiu do grupo.");
+         showError(deleted ? BobbaI18n.t("group.error.left_deleted") : BobbaI18n.t("group.error.left"));
+      }
+      
+      public function onGroupEvent(groupId:String, eventType:int, actorNickname:String, otherNickname:String) : void
+      {
+         // Join/leave/invite text is persisted as GroupMessage history rows.
+         // GroupEvent only refreshes the member list while the chat is open.
+         if(_backend != null && _activeGroupId == groupId)
+         {
+            if(eventType == 1 || eventType == 2)
+            {
+               _backend.listGroupMembers(groupId);
+               _backend.listGroups();
+            }
+         }
       }
       
       public function onGroupError(code:int, message:String) : void
@@ -371,6 +483,119 @@ package com.sulake.habbo.window.utils.bobba
       {
          _pendingInvites = invites != null ? invites : [];
          refreshList();
+      }
+      
+      private function isOwnNickname(nickname:String) : Boolean
+      {
+         var own:String = null;
+         if(nickname == null || nickname.length == 0)
+         {
+            return false;
+         }
+         if(_backend != null && _backend.nickname != null && _backend.nickname.length > 0)
+         {
+            own = _backend.nickname;
+         }
+         else if(_windowManager != null && _windowManager.sessionDataManager != null)
+         {
+            own = _windowManager.sessionDataManager.userName;
+         }
+         return own != null && own.length > 0 && own == nickname;
+      }
+      
+      private function isSystemBody(body:String) : Boolean
+      {
+         if(body == null || body.length == 0)
+         {
+            return false;
+         }
+         return body.indexOf("\u0001sys:invitation\u0001") == 0 || body.indexOf("\u0001sys:notification\u0001") == 0;
+      }
+      
+      private function bumpUnread(groupId:String) : void
+      {
+         var i:int = 0;
+         var g:Object = null;
+         if(groupId == null || _groups == null)
+         {
+            return;
+         }
+         for(i = 0; i < _groups.length; i++)
+         {
+            g = _groups[i];
+            if(g != null && String(g.id) == groupId)
+            {
+               g.unreadCount = int(g.unreadCount) + 1;
+               return;
+            }
+         }
+         // Group missing from local cache — refresh from server.
+         if(_backend != null)
+         {
+            _backend.listGroups();
+         }
+      }
+      
+      private function clearUnread(groupId:String) : void
+      {
+         var i:int = 0;
+         var g:Object = null;
+         if(groupId == null || _groups == null)
+         {
+            return;
+         }
+         for(i = 0; i < _groups.length; i++)
+         {
+            g = _groups[i];
+            if(g != null && String(g.id) == groupId)
+            {
+               g.unreadCount = 0;
+               return;
+            }
+         }
+      }
+      
+      private function syncBarUnread() : void
+      {
+         var i:int = 0;
+         var g:Object = null;
+         var hasUnread:Boolean = false;
+         if(_groups != null)
+         {
+            for(i = 0; i < _groups.length; i++)
+            {
+               g = _groups[i];
+               if(g != null && int(g.unreadCount) > 0)
+               {
+                  hasUnread = true;
+                  break;
+               }
+            }
+         }
+         if(_windowManager != null)
+         {
+            _windowManager.setBobbaGroupChatBarUnread(hasUnread);
+         }
+      }
+      
+      private function playIncomingSound() : void
+      {
+         var cat:* = null;
+         try
+         {
+            if(_windowManager == null)
+            {
+               return;
+            }
+            cat = _windowManager.catalog;
+            if(cat != null && cat.soundManager != null)
+            {
+               cat.soundManager.playSound("HBST_message_received");
+            }
+         }
+         catch(err:Error)
+         {
+         }
       }
    }
 }

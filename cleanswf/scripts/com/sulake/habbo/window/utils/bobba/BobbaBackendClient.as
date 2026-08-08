@@ -24,17 +24,17 @@ package com.sulake.habbo.window.utils.bobba
       
       public static const STATUS_FAILED:String = "failed";
       
-      private static const DEFAULT_HOST:String = "127.0.0.1";
+      private static const DEFAULT_HOST:String = "game.bobbapacket.com";
       
       private static const DEFAULT_PORT:int = 3001;
       
       private static const PROTOCOL_VERSION:int = 1;
       
-      private static const CLIENT_SECRET:String = "change-me-bobba-client-secret";
+      private static const CLIENT_SECRET:String = "why_4r3-you*r3ading_th15%l0l";
       
-      private static const CLIENT_VERSION:String = "0.1.0";
+      private static const CLIENT_VERSION:String = "1.1.4";
       
-      private static const CLIENT_BUILD:String = "BobbaClient-0.1.0";
+      private static const CLIENT_BUILD:String = "BobbaClient-1.1.4";
       
       private static const SOL_NAME:String = "BobbaClient";
       
@@ -234,6 +234,15 @@ package com.sulake.habbo.window.utils.bobba
             return;
          }
          send(BobbaWireCodec.OPEN_GROUP,[groupId != null ? groupId : ""]);
+      }
+      
+      public function markGroupRead(groupId:String) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.MARK_GROUP_READ,[groupId != null ? groupId : ""]);
       }
       
       public function leaveGroup(groupId:String) : void
@@ -501,7 +510,7 @@ package com.sulake.habbo.window.utils.bobba
                      "id":BobbaWireCodec.readString(payload),
                      "name":BobbaWireCodec.readString(payload),
                      "memberCount":BobbaWireCodec.readInt(payload),
-                     "unread":payload.readBoolean()
+                     "unreadCount":BobbaWireCodec.readInt(payload)
                   });
                }
                if(_groupListener != null)
@@ -592,6 +601,14 @@ package com.sulake.habbo.window.utils.bobba
                if(_groupListener != null)
                {
                   _groupListener.onGroupLeft(BobbaWireCodec.readString(payload),payload.readBoolean());
+               }
+               return;
+            }
+            if(id == BobbaWireCodec.GROUP_EVENT)
+            {
+               if(_groupListener != null)
+               {
+                  _groupListener.onGroupEvent(BobbaWireCodec.readString(payload),BobbaWireCodec.readInt(payload),BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload));
                }
                return;
             }

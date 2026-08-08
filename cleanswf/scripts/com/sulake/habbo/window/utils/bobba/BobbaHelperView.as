@@ -207,15 +207,15 @@ package com.sulake.habbo.window.utils.bobba
       private function buildCopy() : void
       {
          var copyWidth:Number = VIEW_W - TEXT_X - TEXT_RIGHT_PAD;
-         var headline:TextField = createText("Customize a sua experiência de jogo",HEADLINE_SIZE,0xFFFFFF,true,copyWidth);
+         var headline:TextField = createText(BobbaI18n.t("helper.headline"),HEADLINE_SIZE,0xFFFFFF,true,copyWidth);
          headline.x = TEXT_X;
          headline.y = HEADLINE_Y;
          addChild(headline);
-         var subtitle:TextField = createText("Utilize esse menu interativo para fazer as configurações iniciais :)",SUBTITLE_SIZE,0xD8D4D3,false,copyWidth);
+         var subtitle:TextField = createText(BobbaI18n.t("helper.subtitle"),SUBTITLE_SIZE,0xD8D4D3,false,copyWidth);
          subtitle.x = TEXT_X;
          subtitle.y = Math.round(headline.y + headline.height + SUBTITLE_GAP);
          addChild(subtitle);
-         var versionField:TextField = createText("Versão 0.1.0",VERSION_SIZE,0x6E6E6E,false,copyWidth);
+         var versionField:TextField = createText(BobbaI18n.t("helper.version"),VERSION_SIZE,0x6E6E6E,false,copyWidth);
          versionField.multiline = false;
          versionField.wordWrap = false;
          versionField.autoSize = TextFieldAutoSize.LEFT;
@@ -238,7 +238,7 @@ package com.sulake.habbo.window.utils.bobba
          _statusDot.x = STATUS_TAG_PAD_X;
          _statusDot.y = STATUS_TAG_PAD_Y + 3;
          _statusTag.addChild(_statusDot);
-         _statusLabel = createText("Offline",VERSION_SIZE,0xEAE6E5,true,80);
+         _statusLabel = createText(BobbaI18n.t("helper.status.offline"),VERSION_SIZE,0xEAE6E5,true,80);
          _statusLabel.x = STATUS_TAG_PAD_X + STATUS_DOT + 5;
          _statusLabel.y = STATUS_TAG_PAD_Y - 1;
          _statusTag.addChild(_statusLabel);
@@ -248,7 +248,7 @@ package com.sulake.habbo.window.utils.bobba
       private function redrawStatusTag() : void
       {
          var color:uint = COLOR_OFFLINE;
-         var label:String = "Offline";
+         var label:String = BobbaI18n.t("helper.status.offline");
          var tagW:Number = 0;
          var tagH:Number = 0;
          if(_statusTag == null || _statusLabel == null || _statusDot == null)
@@ -258,17 +258,17 @@ package com.sulake.habbo.window.utils.bobba
          if(_backendStatus == "connected")
          {
             color = COLOR_ONLINE;
-            label = "Online";
+            label = BobbaI18n.t("helper.status.online");
          }
          else if(_backendStatus == "connecting" || _backendStatus == "handshake")
          {
             color = COLOR_BUSY;
-            label = "Offline";
+            label = BobbaI18n.t("helper.status.offline");
          }
          else
          {
             color = COLOR_OFFLINE;
-            label = "Offline";
+            label = BobbaI18n.t("helper.status.offline");
          }
          _statusLabel.textColor = 0xEAE6E5;
          _statusLabel.text = label;
@@ -589,19 +589,20 @@ package com.sulake.habbo.window.utils.bobba
       
       private function buildSections() : void
       {
-         addSectionTitle("Funções de usuário",COL_LEFT_X,SECTION1_Y);
-         addToggleRow("afk","Anti AFK",COL_LEFT_X,SECTION1_Y + TITLE_TO_ROW);
-         addToggleRow("autodrop","Auto drop",COL_LEFT_X,SECTION1_Y + TITLE_TO_ROW + ROW_SPACING);
-         addToggleRow("turnblock","Bloquear giro",COL_RIGHT_X,SECTION1_Y + TITLE_TO_ROW);
-         addSectionTitle("Qualidade de vida",COL_LEFT_X,SECTION2_Y);
-         addToggleRow("groupchat","Chat em grupo",COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW);
-         addToggleRow("disable67","Desativar 67",COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
-         addToggleRow("disablehabbicons","Desativar Habbicons",COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING * 2);
-         addToggleRow("groupwhisper","Sussurro em grupo",COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW);
-         addToggleRow("movewallitem","Mover item de parede",COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
-         addSectionTitle("Extra",EXTRA_LEFT_X,EXTRA_Y);
-         addActionRow("Traxmachine",EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null,"traxmachine");
-         addToggleRow("bobbalooks","Ver visuais Bobba",COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW);
+         addSectionTitle(BobbaI18n.t("helper.section.user"),COL_LEFT_X,SECTION1_Y);
+         addToggleRow("afk",BobbaI18n.t("helper.toggle.afk"),COL_LEFT_X,SECTION1_Y + TITLE_TO_ROW);
+         addToggleRow("autodrop",BobbaI18n.t("helper.toggle.autodrop"),COL_LEFT_X,SECTION1_Y + TITLE_TO_ROW + ROW_SPACING);
+         addToggleRow("turnblock",BobbaI18n.t("helper.toggle.turnblock"),COL_RIGHT_X,SECTION1_Y + TITLE_TO_ROW);
+         addToggleRow("keepdir",BobbaI18n.t("helper.toggle.keepdir"),COL_RIGHT_X,SECTION1_Y + TITLE_TO_ROW + ROW_SPACING);
+         addSectionTitle(BobbaI18n.t("helper.section.qol"),COL_LEFT_X,SECTION2_Y);
+         addToggleRow("groupchat",BobbaI18n.t("helper.toggle.groupchat"),COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW);
+         addToggleRow("disable67",BobbaI18n.t("helper.toggle.disable67"),COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
+         addToggleRow("disablehabbicons",BobbaI18n.t("helper.toggle.disablehabbicons"),COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING * 2);
+         addToggleRow("groupwhisper",BobbaI18n.t("helper.toggle.groupwhisper"),COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW);
+         addToggleRow("movewallitem",BobbaI18n.t("helper.toggle.movewallitem"),COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
+         addSectionTitle(BobbaI18n.t("helper.section.extra"),EXTRA_LEFT_X,EXTRA_Y);
+         addActionRow(BobbaI18n.t("helper.action.traxmachine"),EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null,"traxmachine");
+         addToggleRow("bobbalooks",BobbaI18n.t("helper.toggle.bobbalooks"),COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW);
       }
       
       private function addSectionTitle(titleText:String, x:Number, y:Number) : void

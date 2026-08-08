@@ -19,9 +19,9 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const MOUSE_BLOCK_KEY:String = "bobba_group_invite";
       
-      private static const INVITE_HELP:String = "Convide seu amigo para o grupo!\nApenas habbos com o Bobba Client conseguem utilizar o chat em grupo. Convide seu amigo para o mundo Bobba.";
+      private static const INVITE_HELP_KEY:String = "group.invite_editor.invite_help";
       
-      private static const CREATE_HELP:String = "Escolha um nome para o novo chat em grupo.";
+      private static const CREATE_HELP_KEY:String = "group.invite_editor.create_help";
       
       private var _windowManager:HabboWindowManagerComponent;
       
@@ -137,32 +137,32 @@ package com.sulake.habbo.window.utils.bobba
             input = IIlluminaInputWidget(IWidgetWindowController(_window.findChildByName("input_widget")).widget);
             if(_mode == MODE_CREATE)
             {
-               _window.caption = "Criar chat em grupo";
-               setHelpText(CREATE_HELP);
+               _window.caption = BobbaI18n.t("group.invite_editor.create_title");
+               setHelpText(BobbaI18n.t(CREATE_HELP_KEY));
                if(_window.findChildByName("create_button") != null)
                {
-                  _window.findChildByName("create_button").caption = "Criar";
+                  _window.findChildByName("create_button").caption = BobbaI18n.t("group.invite_editor.create");
                }
                if(_window.findChildByName("cancel_link") != null)
                {
-                  _window.findChildByName("cancel_link").caption = "Cancelar";
+                  _window.findChildByName("cancel_link").caption = BobbaI18n.t("group.invite_editor.cancel");
                }
-               input.emptyMessage = "Nome do grupo";
+               input.emptyMessage = BobbaI18n.t("group.invite_editor.group_name_placeholder");
                input.message = "";
             }
             else
             {
-               _window.caption = "Adicionar ao grupo";
-               setHelpText(INVITE_HELP);
+               _window.caption = BobbaI18n.t("group.invite_editor.invite_title");
+               setHelpText(BobbaI18n.t(INVITE_HELP_KEY));
                if(_window.findChildByName("create_button") != null)
                {
-                  _window.findChildByName("create_button").caption = "Adicionar";
+                  _window.findChildByName("create_button").caption = BobbaI18n.t("group.invite_editor.add");
                }
                if(_window.findChildByName("cancel_link") != null)
                {
-                  _window.findChildByName("cancel_link").caption = "Cancelar";
+                  _window.findChildByName("cancel_link").caption = BobbaI18n.t("group.invite_editor.cancel");
                }
-               input.emptyMessage = "Apelido do habbo";
+               input.emptyMessage = BobbaI18n.t("group.invite_editor.nickname_placeholder");
                input.message = "";
             }
          }

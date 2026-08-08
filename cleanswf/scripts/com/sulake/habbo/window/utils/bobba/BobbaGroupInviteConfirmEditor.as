@@ -79,26 +79,26 @@ package com.sulake.habbo.window.utils.bobba
          }
          try
          {
-            _window.caption = "Convite de grupo";
+            _window.caption = BobbaI18n.t("group.invite.title");
             if(_window.findChildByName("request_title") != null)
             {
-               _window.findChildByName("request_title").caption = "Entrar no chat em grupo?";
+               _window.findChildByName("request_title").caption = BobbaI18n.t("group.invite.question");
             }
             if(_window.findChildByName("request_type") != null)
             {
-               _window.findChildByName("request_type").caption = "De " + fromNickname;
+               _window.findChildByName("request_type").caption = BobbaI18n.format("group.invite.from",fromNickname);
             }
             if(_window.findChildByName("request_description") != null)
             {
-               _window.findChildByName("request_description").caption = fromNickname + " convidou você para \"" + groupName + "\". Aceite para entrar.";
+               _window.findChildByName("request_description").caption = BobbaI18n.format("group.invite.description",fromNickname,groupName);
             }
             if(_window.findChildByName("skip_link") != null)
             {
-               _window.findChildByName("skip_link").caption = "Recusar";
+               _window.findChildByName("skip_link").caption = BobbaI18n.t("group.invite.decline");
             }
             if(_window.findChildByName("accept_button") != null)
             {
-               _window.findChildByName("accept_button").caption = "Aceitar";
+               _window.findChildByName("accept_button").caption = BobbaI18n.t("group.invite.accept");
             }
             if(_window.findChildByName("countdown") != null)
             {
@@ -176,9 +176,9 @@ package com.sulake.habbo.window.utils.bobba
                   stock.visible = false;
                   if(_artBitmap == null)
                   {
-                     layout = <layout name="bobba_group_invite_art" width="70" height="80" version="0.1">
+                     layout = <layout name="bobba_group_invite_art" width="33" height="33" version="0.1">
                            <window>
-                              <bitmap x="0" y="0" width="70" height="80" params="16" style="100" name="bobba_group_invite_art">
+                              <bitmap x="0" y="0" width="33" height="33" params="16" style="100" name="bobba_group_invite_art">
                                  <variables>
                                     <var key="pivot_point" value="bottom center" type="String"/>
                                     <var key="stretched_x" value="false" type="Boolean"/>
@@ -196,8 +196,9 @@ package com.sulake.habbo.window.utils.bobba
                      }
                      if(_artBitmap != null)
                      {
-                        _artBitmap.x = stock.x;
-                        _artBitmap.y = stock.y;
+                        // Center 33x33 art inside the stock guide_accept image slot.
+                        _artBitmap.x = stock.x + int((stock.width - 33) / 2);
+                        _artBitmap.y = stock.y + int((stock.height - 33) / 2);
                         _window.addChild(_artBitmap);
                      }
                   }

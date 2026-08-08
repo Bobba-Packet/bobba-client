@@ -66,7 +66,7 @@ package com.sulake.habbo.window.utils.bobba
          _members = members != null ? members : [];
          if(_window != null)
          {
-            _window.caption = "Membros" + (groupName != null && groupName.length > 0 ? " - " + groupName : "");
+            _window.caption = groupName != null && groupName.length > 0 ? BobbaI18n.format("group.members.title_named",groupName) : BobbaI18n.t("group.members.title");
          }
          populateMembers();
       }
@@ -100,7 +100,7 @@ package com.sulake.habbo.window.utils.bobba
             {
                return;
             }
-            _window.caption = "Membros";
+            _window.caption = BobbaI18n.t("group.members.title");
             if(_window.findChildByName("submit_button") != null)
             {
                _window.findChildByName("submit_button").visible = false;
@@ -119,8 +119,8 @@ package com.sulake.habbo.window.utils.bobba
                   list.removeListItems();
                }
             }
-            setPanelText("Integrantes deste chat em grupo.");
-            setTitle("Membros do grupo");
+            setPanelText(BobbaI18n.t("group.members.panel_hint"));
+            setTitle(BobbaI18n.t("group.members.panel_title"));
             _window.procedure = windowProcedure;
             _window.center();
             _window.visible = true;
@@ -194,7 +194,7 @@ package com.sulake.habbo.window.utils.bobba
             row = _template.clone() as IWindowController_1;
             row.name = "member_" + i;
             row.blend = 1;
-            roleLabel = String(m.role) == "owner" ? "dono" : "membro";
+            roleLabel = String(m.role) == "owner" ? BobbaI18n.t("group.members.role_owner") : BobbaI18n.t("group.members.role_member");
             row.findChildByName("user_name").caption = String(m.nickname);
             row.findChildByName("room_name").caption = roleLabel;
             try

@@ -62,6 +62,10 @@ package com.sulake.habbo.window.utils.bobba
       
       public static const GROUP_MEMBERS:int = 48;
       
+      public static const GROUP_EVENT:int = 49;
+      
+      public static const MARK_GROUP_READ:int = 50;
+      
       public function BobbaWireCodec()
       {
          super();

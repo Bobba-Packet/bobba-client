@@ -8,7 +8,6 @@
     "login/LoginFlow.as",
     "onBoardingHcUi/InputField.as",
     "onBoardingHcUi/LoaderUI.as",
-    "splash/PhotoSplashScreen.as",
     "HabboLoadingScreen.as",
     "HabboAir.as",
     "com/sulake/habbo/toolbar/extensions/PurseAreaExtension.as",
@@ -26,6 +25,7 @@
     "host": "com/sulake/habbo/window/HabboWindowManagerComponent.as",
     "helpers": [
       "com/sulake/habbo/window/utils/bobba/BobbaPack.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaI18n.as",
       "com/sulake/habbo/window/utils/bobba/BobbaCrypto.as",
       "com/sulake/habbo/window/utils/bobba/BobbaWireCodec.as",
       "com/sulake/habbo/window/utils/bobba/BobbaBackendClient.as",
@@ -50,6 +50,7 @@
     "Do NOT stage IHabboWindowManagerComponent, EventDispatcherWrapper, or Core - FFDec breaks ABC slots.",
     "Do NOT stage HabboAvatarEditor.as - FFDec mangles partSet?.clubLevel sort comparators and breaks the editor (#1009).",
     "Bobba Helper (:bobba) and Trax Machine (:traxmachine / :trax) merge into HabboWindowManagerComponent as file-private classes.",
+    "BobbaI18n loads brand-pack/i18n/{en|pt-BR}.json (hhbr -> pt-BR, else en).",
     "Trax assets deploy from traxmachine-pack/ (local or sibling) to traxmachine/ + local_include/traxmachine/."
   ]
 }

@@ -119,6 +119,7 @@ package com.sulake.habbo.window.utils.bobba
                alertError("buildFromXML did not return a frame");
                return;
             }
+            _window.caption = BobbaI18n.t("helper.window_title");
             _window.color = FRAME_COLOR;
             _window.margins.left = 6;
             _window.margins.top = 30;
@@ -206,7 +207,7 @@ package com.sulake.habbo.window.utils.bobba
       {
          if(_windowManager != null)
          {
-            _windowManager.simpleAlert("Bobba Helper","Error",msg);
+            _windowManager.simpleAlert(BobbaI18n.t("helper.window_title"),BobbaI18n.t("helper.error_title"),msg);
          }
       }
       

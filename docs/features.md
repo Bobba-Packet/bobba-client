@@ -16,11 +16,14 @@ A pixel-art window with the client's own toggles, persisted in the AirPlus `Shar
 |---|---|
 | Anti AFK | Keeps the avatar from going idle (`:afk`) |
 | Auto drop | Drops a hand item as soon as it is received (`:autodrop`) |
-| Bloquear giro | Blocks avatar turning (`:turnblock`) |
-| Mover item de parede | Enables the wall-item mover described below |
+| Manter direção / Keep direction | After receiving a hand item, restores your previous facing (`:keepdir`) |
+| Bloquear giro / Block turn | Blocks avatar turning (`:turnblock`) |
+| Mover item de parede / Move wall item | Enables the wall-item mover described below |
 | Chat em grupo · Sussurro em grupo · Desativar 67 | Flags are stored and persisted, but no behaviour is wired to them yet |
 
-It also links to Discord and opens the Trax Machine. Toggles read and write through `GetBobbaToggle` / `SetBobbaToggle` on `LilithCustoms`, so adding a row is a label plus a case in that switch.
+Labels come from `brand-pack/i18n/` — **pt-BR** on `hhbr`, **English** on every other hotel. See [Assets](assets.md#i18n).
+
+It also links to Discord and opens the Trax Machine. Toggles read and write through `GetBobbaToggle` / `SetBobbaToggle` on `LilithCustoms`, so adding a row is a label key in the locale JSON plus a case in that switch.
 
 The window itself is built with the pattern described in [Adding a custom window](custom-windows.md).
 

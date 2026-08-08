@@ -8,7 +8,7 @@
 
 param(
     [string]$SourceClient = "",
-    [string]$Version = "0.1.0-alpha"
+    [string]$Version = "1.1.4"
 )
 
 $ErrorActionPreference = "Stop"
