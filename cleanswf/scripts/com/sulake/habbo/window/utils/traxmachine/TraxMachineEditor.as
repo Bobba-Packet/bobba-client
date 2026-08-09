@@ -5,9 +5,12 @@ package com.sulake.habbo.window.utils.traxmachine
    import com.sulake.core.window.components.IFrameController;
    import com.sulake.core.window.events.WindowEvent;
    import com.sulake.habbo.window.HabboWindowManagerComponent;
+   import flash.geom.Rectangle;
    
    public class TraxMachineEditor
    {
+      
+      private static const MOUSE_BLOCK_KEY:String = "traxmachine";
       
       private var _windowManager:HabboWindowManagerComponent;
       
@@ -46,16 +49,19 @@ package com.sulake.habbo.window.utils.traxmachine
             {
                _window.visible = true;
                _window.activate();
+               updateRoomMouseBlockRect();
             }
          }
          else if(_window != null)
          {
             _window.visible = false;
+            removeRoomMouseBlockRect();
          }
       }
       
       public function dispose() : void
       {
+         removeRoomMouseBlockRect();
          if(_view != null)
          {
             _view.dispose();
@@ -168,6 +174,7 @@ package com.sulake.habbo.window.utils.traxmachine
             _canvas.setDisplayObject(_view);
             _window.visible = true;
             _window.activate();
+            updateRoomMouseBlockRect();
             if(_assets != null && !_assets.hasBase)
             {
                alertError("Images folder not found at:\n" + (_assets != null ? _assets.basePath : "?"));
@@ -220,6 +227,44 @@ package com.sulake.habbo.window.utils.traxmachine
          if(event.type == "WME_CLICK" && target.name == "header_button_close")
          {
             closeFromView();
+            return;
+         }
+         if(event.type == "WE_RELOCATED" || event.type == "WE_RESIZED" || event.type == "WME_UP")
+         {
+            updateRoomMouseBlockRect();
+         }
+      }
+      
+      private function updateRoomMouseBlockRect() : void
+      {
+         var rect:Rectangle = null;
+         try
+         {
+            if(_window == null || !_window.visible || _windowManager == null || _windowManager.roomEngine == null)
+            {
+               removeRoomMouseBlockRect();
+               return;
+            }
+            rect = new Rectangle();
+            _window.getGlobalRectangle(rect);
+            _windowManager.roomEngine.setMouseEventsDisabledRect(MOUSE_BLOCK_KEY,rect);
+         }
+         catch(errBlock:Error)
+         {
+         }
+      }
+      
+      private function removeRoomMouseBlockRect() : void
+      {
+         try
+         {
+            if(_windowManager != null && _windowManager.roomEngine != null)
+            {
+               _windowManager.roomEngine.removeMouseEventsDisabledRect(MOUSE_BLOCK_KEY);
+            }
+         }
+         catch(errRemove:Error)
+         {
          }
       }
    }

@@ -24,6 +24,8 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const HEAD_GAP:int = 2;
       
+      private static const HEAD_OFFSET_Y:int = 5;
+      
       private static const SCROLL_W:int = 15;
       
       private static const AVATAR_LIST_X:int = 16;
@@ -184,6 +186,7 @@ package com.sulake.habbo.window.utils.bobba
          clearChatList();
          if(messages == null)
          {
+            scrollChatListToBottom();
             return;
          }
          for(i = 0; i < messages.length; i++)
@@ -195,6 +198,7 @@ package com.sulake.habbo.window.utils.bobba
             }
             appendChatOrSystem(String(m.senderNickname),String(m.body),int(m.timestamp),m.senderFigure != null ? String(m.senderFigure) : "");
          }
+         scrollChatListToBottom();
       }
       
       public function appendChatOrSystem(sender:String, body:String, timestamp:int, senderFigure:String = "") : void
@@ -219,6 +223,7 @@ package com.sulake.habbo.window.utils.bobba
          var list:IItemListWindow = null;
          var flipped:Boolean = false;
          var figure:String = "";
+         var nick:String = sender != null ? sender : "";
          if(_window == null || _chatMsgTemplate == null)
          {
             return;
@@ -230,10 +235,22 @@ package com.sulake.habbo.window.utils.bobba
                rememberFigure(sender,senderFigure);
             }
             list = IItemListWindow(_window.findChildByName("chat_list"));
+            bubble = getLastChatBubble(list);
+            if(bubble != null && bubble.name == "chat_msg_0")
+            {
+               widget = bubble.widget as IIlluminaChatBubbleWidget;
+               if(widget != null && widget.userName == nick)
+               {
+                  widget.appendMessage(body);
+                  hideChatTypingIndicator(list);
+                  scrollChatListToBottom(list);
+                  return;
+               }
+            }
             bubble = IWidgetWindowController(_chatMsgTemplate.clone());
             widget = IIlluminaChatBubbleWidget(bubble.widget);
-            flipped = sender == _ownName;
-            figure = resolveFigure(sender);
+            flipped = nick == _ownName;
+            figure = resolveFigure(nick);
             if((figure == null || figure.length == 0) && senderFigure != null)
             {
                figure = senderFigure;
@@ -241,12 +258,10 @@ package com.sulake.habbo.window.utils.bobba
             bubble.name = "chat_msg_0";
             widget.figure = figure != null ? figure : "";
             widget.flipped = flipped;
-            widget.userName = sender != null ? sender : "";
+            widget.userName = nick;
             widget.userId = flipped ? 1 : 2;
             widget.appendMessage(body);
-            list.addListItem(bubble);
-            list.scrollV = 1;
-            list.arrangeListItems();
+            addItemAndScrollChatList(list,bubble);
          }
          catch(err:Error)
          {
@@ -316,9 +331,7 @@ package com.sulake.habbo.window.utils.bobba
                return;
             }
             note.name = kind == "invitation" ? "msg_invitation" : "msg_notification";
-            list.addListItem(note);
-            list.scrollV = 1;
-            list.arrangeListItems();
+            addItemAndScrollChatList(list,note);
          }
          catch(err:Error)
          {
@@ -1045,7 +1058,7 @@ package com.sulake.habbo.window.utils.bobba
             {
                tile.visible = true;
                tile.x = xPos;
-               tile.y = 0;
+               tile.y = HEAD_OFFSET_Y;
                tile.blend = 1;
                xPos += tileW + HEAD_GAP;
             }
@@ -1215,6 +1228,102 @@ package com.sulake.habbo.window.utils.bobba
          return "";
       }
       
+      private function getChatList() : IItemListWindow
+      {
+         if(_window == null)
+         {
+            return null;
+         }
+         try
+         {
+            return IItemListWindow(_window.findChildByName("chat_list"));
+         }
+         catch(err:Error)
+         {
+         }
+         return null;
+      }
+      
+      private function getLastChatBubble(list:IItemListWindow = null) : IWidgetWindowController
+      {
+         if(list == null)
+         {
+            list = getChatList();
+         }
+         if(list == null || list.numListItems < 2)
+         {
+            return null;
+         }
+         try
+         {
+            // Last item is the guide_ongoing typing/spacer row.
+            return list.getListItemAt(list.numListItems - 2) as IWidgetWindowController;
+         }
+         catch(err:Error)
+         {
+         }
+         return null;
+      }
+      
+      private function addItemAndScrollChatList(list:IItemListWindow, item:IWindowModel) : void
+      {
+         if(list == null || item == null)
+         {
+            return;
+         }
+         // guide_ongoing keeps a trailing typing/spacer row; insert above it.
+         if(list.numListItems > 0)
+         {
+            list.addListItemAt(item,list.numListItems - 1);
+         }
+         else
+         {
+            list.addListItem(item);
+         }
+         hideChatTypingIndicator(list);
+         scrollChatListToBottom(list);
+      }
+      
+      private function scrollChatListToBottom(list:IItemListWindow = null) : void
+      {
+         if(list == null)
+         {
+            list = getChatList();
+         }
+         if(list == null)
+         {
+            return;
+         }
+         try
+         {
+            list.arrangeListItems();
+            list.scrollV = 1;
+         }
+         catch(err:Error)
+         {
+         }
+      }
+      
+      private function hideChatTypingIndicator(list:IItemListWindow) : void
+      {
+         var spacer:IWindowModel = null;
+         if(list == null || list.numListItems < 1)
+         {
+            return;
+         }
+         try
+         {
+            spacer = list.getListItemAt(list.numListItems - 1);
+            if(spacer != null)
+            {
+               spacer.blend = 0;
+            }
+         }
+         catch(err:Error)
+         {
+         }
+      }
+      
       private function clearChatList() : void
       {
          var list:IItemListWindow = null;
@@ -1224,11 +1333,13 @@ package com.sulake.habbo.window.utils.bobba
          }
          try
          {
-            list = IItemListWindow(_window.findChildByName("chat_list"));
-            while(list != null && list.numListItems > 0)
+            list = getChatList();
+            while(list != null && list.numListItems > 1)
             {
                list.removeListItemAt(0);
             }
+            hideChatTypingIndicator(list);
+            scrollChatListToBottom(list);
          }
          catch(err:Error)
          {
