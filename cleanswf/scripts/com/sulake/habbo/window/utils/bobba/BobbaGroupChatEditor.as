@@ -1381,7 +1381,7 @@ package com.sulake.habbo.window.utils.bobba
             {
                if(_controller != null)
                {
-                  _controller.leaveGroup(_groupId);
+                  _controller.confirmLeaveGroup(_groupId,_groupName);
                }
                return;
             }

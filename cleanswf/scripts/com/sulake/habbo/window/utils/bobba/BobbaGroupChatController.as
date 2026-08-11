@@ -18,6 +18,8 @@
       
       private var _confirmEditor:BobbaGroupInviteConfirmEditor;
       
+      private var _leaveConfirmEditor:BobbaGroupLeaveConfirmEditor;
+      
       private var _membersEditor:BobbaGroupMembersEditor;
       
       private var _activeGroupId:String = "";
@@ -70,6 +72,11 @@
             _confirmEditor.dispose();
             _confirmEditor = null;
          }
+         if(_leaveConfirmEditor != null)
+         {
+            _leaveConfirmEditor.dispose();
+            _leaveConfirmEditor = null;
+         }
          if(_membersEditor != null)
          {
             _membersEditor.dispose();
@@ -115,6 +122,10 @@
          {
             return true;
          }
+         if(_leaveConfirmEditor != null && _leaveConfirmEditor.visible)
+         {
+            return true;
+         }
          if(_membersEditor != null && _membersEditor.visible)
          {
             return true;
@@ -139,6 +150,10 @@
          if(_confirmEditor != null)
          {
             _confirmEditor.visible = false;
+         }
+         if(_leaveConfirmEditor != null)
+         {
+            _leaveConfirmEditor.visible = false;
          }
          if(_membersEditor != null)
          {
@@ -252,6 +267,28 @@
          {
             Logger.log("[BobbaGroupChat] openUserProfile failed",err.message);
          }
+      }
+      
+      public function confirmLeaveGroup(groupId:String = "", groupName:String = "") : void
+      {
+         if(groupId == null || groupId.length == 0)
+         {
+            groupId = _activeGroupId;
+         }
+         if(groupId == null || groupId.length == 0)
+         {
+            return;
+         }
+         if(groupName == null || groupName.length == 0)
+         {
+            groupName = _activeGroupName;
+         }
+         if(_leaveConfirmEditor == null)
+         {
+            _leaveConfirmEditor = new BobbaGroupLeaveConfirmEditor(_windowManager,this);
+         }
+         _leaveConfirmEditor.visible = true;
+         _leaveConfirmEditor.setLeave(groupId,groupName);
       }
       
       public function leaveGroup(groupId:String = "") : void
@@ -434,6 +471,10 @@
       
       public function onGroupLeft(groupId:String, deleted:Boolean) : void
       {
+         if(_leaveConfirmEditor != null)
+         {
+            _leaveConfirmEditor.visible = false;
+         }
          if(_activeGroupId == groupId)
          {
             _activeGroupId = "";

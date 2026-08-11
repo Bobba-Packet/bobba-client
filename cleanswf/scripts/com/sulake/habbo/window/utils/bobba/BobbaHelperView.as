@@ -600,6 +600,7 @@ package com.sulake.habbo.window.utils.bobba
          addToggleRow("disablehabbicons",BobbaI18n.t("helper.toggle.disablehabbicons"),COL_LEFT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING * 2);
          addToggleRow("groupwhisper",BobbaI18n.t("helper.toggle.groupwhisper"),COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW);
          addToggleRow("movewallitem",BobbaI18n.t("helper.toggle.movewallitem"),COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING);
+         addToggleRow("antiflood",BobbaI18n.t("helper.toggle.antiflood"),COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING * 2);
          addSectionTitle(BobbaI18n.t("helper.section.extra"),EXTRA_LEFT_X,EXTRA_Y);
          addActionRow(BobbaI18n.t("helper.action.traxmachine"),EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null,"traxmachine");
          addToggleRow("bobbalooks",BobbaI18n.t("helper.toggle.bobbalooks"),COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW);

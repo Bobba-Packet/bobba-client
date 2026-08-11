@@ -66,6 +66,14 @@ package com.sulake.habbo.window.utils.bobba
       
       public static const MARK_GROUP_READ:int = 50;
       
+      public static const SEND_ROOM_WHISPER:int = 60;
+      
+      public static const ROOM_WHISPER:int = 61;
+      
+      public static const LOOKUP_BOBBA_USERS:int = 62;
+      
+      public static const BOBBA_USERS_RESULT:int = 63;
+      
       public function BobbaWireCodec()
       {
          super();

@@ -19,13 +19,25 @@ A pixel-art window with the client's own toggles, persisted in the AirPlus `Shar
 | Manter direção / Keep direction | After receiving a hand item, restores your previous facing (`:keepdir`) |
 | Bloquear giro / Block turn | Blocks avatar turning (`:turnblock`) |
 | Mover item de parede / Move wall item | Enables the wall-item mover described below |
-| Chat em grupo · Sussurro em grupo · Desativar 67 | Flags are stored and persisted, but no behaviour is wired to them yet |
+| Chat em grupo · Sussurro em grupo · Desativar 67 · Anti-flood | **Chat em grupo** opens `:groupchat`. **Sussurro em grupo** enables avatar-menu / `:group` room whisper (Bobba sidecar only). **Desativar 67** is wired. **Anti-flood** stacks identical room bubbles from the same user as `Hi (2x)` instead of repeating them. |
 
 Labels come from `brand-pack/i18n/` — **pt-BR** on `hhbr`, **English** on every other hotel. See [Assets](assets.md#i18n).
 
 It also links to Discord and opens the Trax Machine. Toggles read and write through `GetBobbaToggle` / `SetBobbaToggle` on `LilithCustoms`, so adding a row is a label key in the locale JSON plus a case in that switch.
 
 The window itself is built with the pattern described in [Adding a custom window](custom-windows.md).
+
+## Group whisper (`:group` / `:grupo`)
+
+Per-room multi-recipient whisper over the Bobba sidecar (never hotel chat).
+
+1. Enable **Sussurro em grupo** in `:bobba`
+2. On another user's avatar menu, under Whisper, click **Sussurro em grupo** / **Group whisper** to toggle them into your list (button only appears for Habbos registered on Bobba)
+3. A small panel lists current targets (remove from there too)
+4. Chat with `:group message` or `:grupo message` — bubbles show as whisper-style on each avatar
+5. Changing rooms clears the list
+
+Requires recipients to be online on Bobba with a linked `(hotelId, nickname)` profile.
 
 ## Wall item mover
 

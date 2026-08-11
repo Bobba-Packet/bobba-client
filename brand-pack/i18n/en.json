@@ -3,7 +3,7 @@
   "helper.error_title": "Error",
   "helper.headline": "Customize your game experience",
   "helper.subtitle": "Use this interactive menu to set up your preferences :)",
-  "helper.version": "Version 0.1.5",
+  "helper.version": "Version 0.1.6-alpha",
   "helper.status.online": "Online",
   "helper.status.offline": "Offline",
   "helper.section.user": "User features",
@@ -17,9 +17,21 @@
   "helper.toggle.disablehabbicons": "Disable Habbicons",
   "helper.toggle.groupwhisper": "Group whisper",
   "helper.toggle.movewallitem": "Move wall item",
+  "helper.toggle.antiflood": "Chat anti-flood",
   "helper.section.extra": "Extra",
   "helper.action.traxmachine": "Traxmachine",
   "helper.toggle.bobbalooks": "Show Bobba looks",
+
+  "avatar.menu.groupwhisper": "Group whisper",
+  "groupwhisper.panel.title": "Group whisper",
+  "groupwhisper.panel.hint": "People you are whispering to.",
+  "groupwhisper.panel.empty": "No one in the whisper group.",
+  "groupwhisper.panel.remove": "Remove",
+  "groupwhisper.alert.disabled": "Enable Group whisper in :bobba first.",
+  "groupwhisper.alert.empty": "Add people with Group whisper on the avatar menu.",
+  "groupwhisper.alert.offline": "Bobba backend is offline.",
+  "groupwhisper.alert.not_bobba": "That Habbo is not using Bobba Client.",
+  "groupwhisper.bubble.group": "group",
 
   "group.title": "Group chat",
   "group.alert.warning": "Notice",
@@ -67,6 +79,12 @@
   "group.chat.members": "View members",
   "group.chat.members_tooltip": "Open the group members list",
 
+  "group.leave.title": "Leave group",
+  "group.leave.question": "Leave this group chat?",
+  "group.leave.description": "Are you sure you want to leave \"{0}\"? You will stop receiving messages from this group.",
+  "group.leave.cancel": "Cancel",
+  "group.leave.confirm": "Leave",
+
   "group.members.title": "Members",
   "group.members.title_named": "Members - {0}",
   "group.members.panel_title": "Group members",
@@ -86,5 +104,8 @@
   "alert.disable67_off": "67 bubble enabled!",
   "alert.habbicons_on": "Habbicons disabled!",
   "alert.habbicons_off": "Habbicons enabled!",
-  "alert.bobbalooks_devwar_blocked": "Devwar is disabled while Show Bobba looks is off."
+  "alert.bobbalooks_devwar_blocked": "Devwar is disabled while Show Bobba looks is off.",
+
+  "sniper.title": "Trying to enter",
+  "sniper.body": "The room is full, but we're trying to connect you.\nCheck {0} · {1}\nUsers: {2}"
 }

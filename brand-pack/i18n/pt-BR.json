@@ -3,7 +3,7 @@
   "helper.error_title": "Erro",
   "helper.headline": "Customize a sua experiência de jogo",
   "helper.subtitle": "Utilize esse menu interativo para fazer as configurações iniciais :)",
-  "helper.version": "Versão 0.1.5",
+  "helper.version": "Versão 0.1.6-alpha",
   "helper.status.online": "Online",
   "helper.status.offline": "Offline",
   "helper.section.user": "Funções de usuário",
@@ -17,9 +17,21 @@
   "helper.toggle.disablehabbicons": "Desativar Habbicons",
   "helper.toggle.groupwhisper": "Sussurro em grupo",
   "helper.toggle.movewallitem": "Mover item de parede",
+  "helper.toggle.antiflood": "Anti-flood do chat",
   "helper.section.extra": "Extra",
   "helper.action.traxmachine": "Traxmachine",
   "helper.toggle.bobbalooks": "Ver visuais Bobba",
+
+  "avatar.menu.groupwhisper": "Sussurro em grupo",
+  "groupwhisper.panel.title": "Sussurro em grupo",
+  "groupwhisper.panel.hint": "Pessoas com quem você está sussurrando.",
+  "groupwhisper.panel.empty": "Ninguém no sussurro em grupo.",
+  "groupwhisper.panel.remove": "Remover",
+  "groupwhisper.alert.disabled": "Ative Sussurro em grupo em :bobba primeiro.",
+  "groupwhisper.alert.empty": "Adicione pessoas com Sussurro em grupo no menu do avatar.",
+  "groupwhisper.alert.offline": "O backend Bobba está offline.",
+  "groupwhisper.alert.not_bobba": "Esse Habbo não está usando o Bobba Client.",
+  "groupwhisper.bubble.group": "grupo",
 
   "group.title": "Chat em grupo",
   "group.alert.warning": "Aviso",
@@ -67,6 +79,12 @@
   "group.chat.members": "Ver membros",
   "group.chat.members_tooltip": "Abrir lista de membros do grupo",
 
+  "group.leave.title": "Sair do grupo",
+  "group.leave.question": "Sair deste chat em grupo?",
+  "group.leave.description": "Tem certeza de que deseja sair de \"{0}\"? Você deixará de receber mensagens deste grupo.",
+  "group.leave.cancel": "Cancelar",
+  "group.leave.confirm": "Sair",
+
   "group.members.title": "Membros",
   "group.members.title_named": "Membros - {0}",
   "group.members.panel_title": "Membros do grupo",
@@ -86,5 +104,8 @@
   "alert.disable67_off": "Bolha 67 ativada!",
   "alert.habbicons_on": "Habbicons desativados!",
   "alert.habbicons_off": "Habbicons ativados!",
-  "alert.bobbalooks_devwar_blocked": "Devwar fica desativado enquanto Ver visuais Bobba estiver off."
+  "alert.bobbalooks_devwar_blocked": "Devwar fica desativado enquanto Ver visuais Bobba estiver off.",
+
+  "sniper.title": "Tentando entrar",
+  "sniper.body": "O quarto está cheio, mas estamos tentando te conectar.\nChecagem {0} · {1}\nUsuários: {2}"
 }

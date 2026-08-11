@@ -302,7 +302,7 @@ Fork-specific features.
 | Label (pt-BR) | Control | Default | Status | Variable |
 |---|---|---|---|---|
 | Chat em grupo | Toggle | Off | **Stub** | `BobbaGroupChatEnabled` |
-| Sussurro em grupo | Toggle | Off | **Stub** | `BobbaGroupWhisperEnabled` |
+| Sussurro em grupo | Toggle | Off | Ready | `BobbaGroupWhisperEnabled` |
 | Desativar 67 | Toggle | Off | Ready | `BobbaDisable67Enabled` |
 | Desativar Habbicons | Toggle | Off | Ready | `BobbaDisableHabbiconsEnabled` |
 | Ver visuais Bobba | Toggle | **On** | Ready | `BobbaLooksEnabled` |
@@ -311,9 +311,9 @@ Fork-specific features.
 `BobbaDisableHabbiconsEnabled` / `:disablehabbicons` hides room Habbicon stickers from other users.  
 `BobbaLooksEnabled` gates the avatar-editor **Bobba Clothes** button and DevWar (`:devwar`). When on, the button opens a secondary unlocked wardrobe (instance 3) with the Bobba Clothes hero behind the nickname. Closing that editor disposes it to free RAM while keeping any look the user saved (`BobbaSavedFigure`). Turning the toggle off stops DevWar, unloads Bobba Clothes, and reverts the avatar to its original session figure.
 
-The two group-chat stubs save and restore correctly but have **no behaviour wired yet**.
-They already appear in the Bobba Helper. Decide whether they ship visible in the settings
-window before the features land, or stay hidden until then.
+`BobbaGroupWhisperEnabled` gates avatar-menu **Sussurro em grupo** and `:group` / `:grupo` room whisper (Bobba packets 60/61). Recipient list is per-room and clears on room enter.
+
+`BobbaGroupChatEnabled` still saves/restores with **no gate behaviour wired yet** (`:groupchat` opens regardless).
 
 ---
 

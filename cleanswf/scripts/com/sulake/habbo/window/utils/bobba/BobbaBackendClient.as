@@ -32,9 +32,9 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const CLIENT_SECRET:String = "why_4r3-you*r3ading_th15%l0l";
       
-      private static const CLIENT_VERSION:String = "0.1.5";
+      private static const CLIENT_VERSION:String = "0.1.6-alpha";
       
-      private static const CLIENT_BUILD:String = "BobbaClient-0.1.5";
+      private static const CLIENT_BUILD:String = "BobbaClient-0.1.6-alpha";
       
       private static const SOL_NAME:String = "BobbaClient";
       
@@ -88,6 +88,8 @@ package com.sulake.habbo.window.utils.bobba
       
       private var _groupListener:*;
       
+      private var _whisperListener:*;
+      
       public function BobbaBackendClient(windowManager:*, host:String = null, port:int = 0)
       {
          super();
@@ -108,6 +110,11 @@ package com.sulake.habbo.window.utils.bobba
       public function setGroupListener(listener:*) : void
       {
          _groupListener = listener;
+      }
+      
+      public function setWhisperListener(listener:*) : void
+      {
+         _whisperListener = listener;
       }
       
       public function get status() : String
@@ -180,6 +187,7 @@ package com.sulake.habbo.window.utils.bobba
          closeSocket();
          _windowManager = null;
          _groupListener = null;
+         _whisperListener = null;
       }
       
       public function createGroup(name:String) : void
@@ -225,6 +233,24 @@ package com.sulake.habbo.window.utils.bobba
             return;
          }
          send(BobbaWireCodec.SEND_GROUP_MESSAGE,[groupId != null ? groupId : "",body != null ? body : ""]);
+      }
+      
+      public function sendRoomWhisper(body:String, recipientsCsv:String) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.SEND_ROOM_WHISPER,[body != null ? body : "",recipientsCsv != null ? recipientsCsv : ""]);
+      }
+      
+      public function lookupBobbaUsers(nicknamesCsv:String) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.LOOKUP_BOBBA_USERS,[nicknamesCsv != null ? nicknamesCsv : ""]);
       }
       
       public function openGroup(groupId:String) : void
@@ -432,6 +458,9 @@ package com.sulake.habbo.window.utils.bobba
          var hmac:String = null;
          var reason:int = 0;
          var message:String = null;
+         var count:int = 0;
+         var i:int = 0;
+         var results:Array = null;
          if(id == BobbaWireCodec.CHALLENGE)
          {
             challenge = BobbaWireCodec.readString(payload);
@@ -472,6 +501,31 @@ package com.sulake.habbo.window.utils.bobba
          {
             message = BobbaWireCodec.readString(payload);
             Logger.log("[BobbaBackend]",message);
+            return;
+         }
+         if(id == BobbaWireCodec.ROOM_WHISPER)
+         {
+            if(_whisperListener != null)
+            {
+               _whisperListener.onRoomWhisper(BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload),BobbaWireCodec.readInt(payload));
+            }
+            return;
+         }
+         if(id == BobbaWireCodec.BOBBA_USERS_RESULT)
+         {
+            if(_whisperListener != null)
+            {
+               count = BobbaWireCodec.readInt(payload);
+               results = [];
+               for(i = 0; i < count; i++)
+               {
+                  results.push({
+                     "nickname":BobbaWireCodec.readString(payload),
+                     "registered":payload.readBoolean()
+                  });
+               }
+               _whisperListener.onBobbaUsersResult(results);
+            }
             return;
          }
          handleGroupPacket(id,payload);
