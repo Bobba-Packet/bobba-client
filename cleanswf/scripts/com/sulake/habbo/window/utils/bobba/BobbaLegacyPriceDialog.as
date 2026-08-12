@@ -143,6 +143,7 @@ package com.sulake.habbo.window.utils.bobba
          setText("chart_title","");
          setText("credit_prefix",BobbaI18n.t("prices.credit.prefix","powered by "));
          setText("credit_link","securehabbo.com");
+         setText("open_sh_page",BobbaI18n.t("prices.open_page","Open page"));
          clearChart();
          _window.caption = BobbaI18n.t("prices.window_title");
          _window.visible = true;
@@ -1339,18 +1340,19 @@ package com.sulake.habbo.window.utils.bobba
 										<bitmap x="2" y="2" width="48" height="48" params="16" style="0" name="item_icon"/>
 									</children>
 								</border>
-								<text x="64" y="158" width="268" height="18" params="16" style="3" name="item_name">
+								<text x="64" y="158" width="160" height="18" params="16" style="3" name="item_name">
 									<variables>
 										<var key="auto_size" value="none" type="String"/>
 										<var key="text_style" value="u_bold" type="String"/>
 									</variables>
 								</text>
-								<text x="64" y="178" width="268" height="16" params="16" style="3" name="item_meta">
+								<text x="64" y="178" width="160" height="16" params="16" style="3" name="item_meta">
 									<variables>
 										<var key="auto_size" value="none" type="String"/>
 										<var key="text_style" value="u_small" type="String"/>
 									</variables>
 								</text>
+								<button x="228" y="162" width="106" height="28" params="17" style="3" name="open_sh_page" caption="Open page"/>
 								<border x="6" y="210" width="106" height="74" params="16" style="3" name="stat_last_box">
 									<children>
 										<bitmap x="0" y="0" width="106" height="74" params="16" style="0" name="stat_last_bg"/>
@@ -1574,6 +1576,11 @@ package com.sulake.habbo.window.utils.bobba
                setDayRange(365);
                return;
             }
+            if(target.name == "open_sh_page")
+            {
+               openSecureHabboFurniPage();
+               return;
+            }
             if(target.name == "credit_hit" || target.name == "credit_link" || target.name == "credit_prefix")
             {
                openSecureHabboSite();
@@ -1769,6 +1776,64 @@ package com.sulake.habbo.window.utils.bobba
          {
             Logger.log("[BobbaLegacyPrice] open site failed",err.message);
          }
+      }
+      
+      private function openSecureHabboFurniPage() : void
+      {
+         var url:String = "";
+         if(_classname == null || _classname.length == 0)
+         {
+            openSecureHabboSite();
+            return;
+         }
+         try
+         {
+            url = "https://securehabbo.com/legacy/" + encodeURIComponent(_classname) + "?hotel=" + secureHabboHotelCode();
+            navigateToURL(new URLRequest(url),"_blank");
+         }
+         catch(err:Error)
+         {
+            Logger.log("[BobbaLegacyPrice] open furni page failed",err.message);
+         }
+      }
+      
+      private function secureHabboHotelCode() : String
+      {
+         var hotel:String = "";
+         var backend:* = null;
+         try
+         {
+            if(_windowManager != null)
+            {
+               backend = _windowManager.bobbaBackend;
+               if(backend != null)
+               {
+                  hotel = String(backend.hotelId);
+               }
+            }
+         }
+         catch(errBackend:Error)
+         {
+            hotel = "";
+         }
+         if(hotel == null || hotel.length == 0)
+         {
+            hotel = BobbaI18n.hotelId;
+         }
+         hotel = BobbaBackendClient.canonicalizeHotelId(hotel);
+         if(hotel.indexOf("hh") == 0 && hotel.length > 2)
+         {
+            hotel = hotel.substring(2);
+         }
+         if(hotel == "us" || hotel == "en")
+         {
+            return "com";
+         }
+         if(hotel == "unknown" || hotel.length == 0)
+         {
+            return "com";
+         }
+         return hotel;
       }
    }
 }

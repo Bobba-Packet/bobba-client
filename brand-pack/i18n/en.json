@@ -120,6 +120,7 @@
   "prices.range.max_qty": "Max quantity",
   "prices.range.min_qty": "Min quantity",
   "prices.credit.prefix": "powered by ",
+  "prices.open_page": "Open page",
   "marketplace.filter.all": "All",
   "marketplace.filter.floor": "Floor",
   "marketplace.filter.wall": "Wall",
