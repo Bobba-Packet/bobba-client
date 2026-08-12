@@ -3,12 +3,12 @@
 #
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1
-#   powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.6-alpha
+#   powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.7-alpha
 #
 # Requires: HabboAir_bobba.swf (run inject first), gh auth, network for AirPlus patch base.
 
 param(
-    [string]$Version = "0.1.6-alpha",
+    [string]$Version = "0.1.7-alpha",
     [switch]$SkipUpload
 )
 

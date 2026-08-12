@@ -24,6 +24,8 @@ package com.sulake.habbo.window.utils.bobba
       
       public static const SERVER_MESSAGE:int = 20;
       
+      public static const SERVER_ALERT:int = 21;
+      
       public static const CREATE_GROUP:int = 30;
       
       public static const GROUP_CREATED:int = 31;
@@ -73,6 +75,10 @@ package com.sulake.habbo.window.utils.bobba
       public static const LOOKUP_BOBBA_USERS:int = 62;
       
       public static const BOBBA_USERS_RESULT:int = 63;
+      
+      public static const LEGACY_PRICE_LOOKUP:int = 70;
+      
+      public static const LEGACY_PRICE_RESULT:int = 71;
       
       public function BobbaWireCodec()
       {

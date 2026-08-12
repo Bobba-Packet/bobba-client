@@ -9,6 +9,7 @@ package com.sulake.habbo.window.utils.bobba
    import flash.net.Socket;
    import flash.system.Capabilities;
    import flash.utils.ByteArray;
+   import flash.utils.Endian;
    import flash.utils.Timer;
    
    public class BobbaBackendClient
@@ -32,9 +33,9 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const CLIENT_SECRET:String = "why_4r3-you*r3ading_th15%l0l";
       
-      private static const CLIENT_VERSION:String = "0.1.6-alpha";
+      private static const CLIENT_VERSION:String = "0.1.7-alpha";
       
-      private static const CLIENT_BUILD:String = "BobbaClient-0.1.6-alpha";
+      private static const CLIENT_BUILD:String = "BobbaClient-0.1.7-alpha";
       
       private static const SOL_NAME:String = "BobbaClient";
       
@@ -90,6 +91,8 @@ package com.sulake.habbo.window.utils.bobba
       
       private var _whisperListener:*;
       
+      private var _legacyPriceCallbacks:Object;
+      
       public function BobbaBackendClient(windowManager:*, host:String = null, port:int = 0)
       {
          super();
@@ -97,6 +100,7 @@ package com.sulake.habbo.window.utils.bobba
          _host = host != null && host.length > 0 ? host : DEFAULT_HOST;
          _port = port > 0 ? port : DEFAULT_PORT;
          _buffer = new ByteArray();
+         _legacyPriceCallbacks = {};
          _machineId = loadOrCreateMachineId();
          refreshHotelFromSol();
          _heartbeat = new Timer(HEARTBEAT_MS);
@@ -188,6 +192,7 @@ package com.sulake.habbo.window.utils.bobba
          _windowManager = null;
          _groupListener = null;
          _whisperListener = null;
+         _legacyPriceCallbacks = {};
       }
       
       public function createGroup(name:String) : void
@@ -251,6 +256,32 @@ package com.sulake.habbo.window.utils.bobba
             return;
          }
          send(BobbaWireCodec.LOOKUP_BOBBA_USERS,[nicknamesCsv != null ? nicknamesCsv : ""]);
+      }
+      
+      public function requestLegacyPrice(classname:String, historyDays:int = 30, includeAllHotels:Boolean = true, handler:Object = null) : void
+      {
+         var key:String = classname != null ? classname : "";
+         var pending:Array = null;
+         if(!_authed || key.length == 0)
+         {
+            Logger.log("[BobbaBackend] legacy price skip",key,"authed=" + _authed);
+            return;
+         }
+         if(handler != null)
+         {
+            pending = _legacyPriceCallbacks._pending as Array;
+            if(pending == null)
+            {
+               pending = [];
+               _legacyPriceCallbacks._pending = pending;
+            }
+            pending.push({
+               "classname":key,
+               "handler":handler
+            });
+         }
+         Logger.log("[BobbaBackend] legacy price request",key,_hotelId);
+         send(BobbaWireCodec.LEGACY_PRICE_LOOKUP,[key,_hotelId,historyDays,includeAllHotels]);
       }
       
       public function openGroup(groupId:String) : void
@@ -452,6 +483,27 @@ package com.sulake.habbo.window.utils.bobba
          }
       }
       
+      private function showServerAlert(title:String, body:String) : void
+      {
+         var alertTitle:String = title != null && title.length > 0 ? title : "Bobba";
+         var alertBody:String = body != null ? body : "";
+         try
+         {
+            if(_windowManager != null)
+            {
+               _windowManager.simpleAlert(alertTitle,"",alertBody);
+            }
+            else
+            {
+               Logger.log("[BobbaBackend] alert",alertTitle,alertBody);
+            }
+         }
+         catch(alertErr:Error)
+         {
+            Logger.log("[BobbaBackend] alert failed",alertErr.message);
+         }
+      }
+      
       private function handlePacket(id:int, payload:ByteArray) : void
       {
          var challenge:String = null;
@@ -503,6 +555,11 @@ package com.sulake.habbo.window.utils.bobba
             Logger.log("[BobbaBackend]",message);
             return;
          }
+         if(id == BobbaWireCodec.SERVER_ALERT)
+         {
+            showServerAlert(BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload));
+            return;
+         }
          if(id == BobbaWireCodec.ROOM_WHISPER)
          {
             if(_whisperListener != null)
@@ -528,7 +585,121 @@ package com.sulake.habbo.window.utils.bobba
             }
             return;
          }
+         if(id == BobbaWireCodec.LEGACY_PRICE_RESULT)
+         {
+            dispatchLegacyPriceResult(payload);
+            return;
+         }
          handleGroupPacket(id,payload);
+      }
+      
+      private function dispatchLegacyPriceResult(payload:ByteArray) : void
+      {
+         var data:BobbaLegacyPriceData = new BobbaLegacyPriceData();
+         var historyLen:int = 0;
+         var hotelCount:int = 0;
+         var i:int = 0;
+         var pending:Array = null;
+         var item:Object = null;
+         var leftover:Array = [];
+         try
+         {
+            payload.endian = Endian.BIG_ENDIAN;
+            data.classname = BobbaWireCodec.readString(payload);
+            data.success = payload.readBoolean();
+            data.hotel = BobbaWireCodec.readString(payload);
+            data.name = BobbaWireCodec.readString(payload);
+            data.lastPrice = BobbaWireCodec.readInt(payload);
+            data.lastAverage = BobbaWireCodec.readInt(payload);
+            data.lastQuantity = BobbaWireCodec.readInt(payload);
+            data.category = BobbaWireCodec.readString(payload);
+            data.badgeCode = BobbaWireCodec.readString(payload);
+            data.badgeCountLocal = BobbaWireCodec.readInt(payload);
+            data.releasePrice = BobbaWireCodec.readInt(payload);
+            historyLen = BobbaWireCodec.readInt(payload);
+            if(historyLen < 0)
+            {
+               historyLen = 0;
+            }
+            if(historyLen > 60)
+            {
+               historyLen = 60;
+            }
+            for(i = 0; i < historyLen; i++)
+            {
+               data.historyPrices.push(BobbaWireCodec.readInt(payload));
+            }
+            for(i = 0; i < historyLen; i++)
+            {
+               data.historyAverages.push(BobbaWireCodec.readInt(payload));
+            }
+            for(i = 0; i < historyLen; i++)
+            {
+               data.historyQuantities.push(BobbaWireCodec.readInt(payload));
+            }
+            hotelCount = BobbaWireCodec.readInt(payload);
+            if(hotelCount < 0)
+            {
+               hotelCount = 0;
+            }
+            if(hotelCount > 16)
+            {
+               hotelCount = 16;
+            }
+            for(i = 0; i < hotelCount; i++)
+            {
+               data.hotels.push({
+                  "hotel":BobbaWireCodec.readString(payload),
+                  "price":BobbaWireCodec.readInt(payload),
+                  "average":BobbaWireCodec.readInt(payload),
+                  "quantity":BobbaWireCodec.readInt(payload)
+               });
+            }
+         }
+         catch(err:Error)
+         {
+            Logger.log("[BobbaBackend] legacy price decode failed",err.message);
+            if(!data.success && data.lastPrice == 0)
+            {
+               data.success = false;
+            }
+         }
+         Logger.log("[BobbaBackend] legacy price",data.classname,data.success,data.lastPrice,data.lastAverage,data.historyLength);
+         pending = _legacyPriceCallbacks._pending as Array;
+         _legacyPriceCallbacks._pending = [];
+         if(pending != null)
+         {
+            for each(item in pending)
+            {
+               if(item == null || item.handler == null)
+               {
+                  continue;
+               }
+               if(data.classname == null || data.classname.length == 0 || String(item.classname) == data.classname || pending.length == 1)
+               {
+                  try
+                  {
+                     item.handler.onBobbaLegacyPrice(data);
+                  }
+                  catch(callErr:Error)
+                  {
+                     Logger.log("[BobbaBackend] legacy price handler failed",callErr.message);
+                  }
+               }
+               else
+               {
+                  leftover.push(item);
+               }
+            }
+            if(leftover.length > 0)
+            {
+               _legacyPriceCallbacks._pending = leftover;
+            }
+         }
+         else
+         {
+            Logger.log("[BobbaBackend] legacy price no pending handler",data.classname);
+         }
       }
       
       private function handleGroupPacket(id:int, payload:ByteArray) : void
@@ -980,6 +1151,10 @@ package com.sulake.habbo.window.utils.bobba
          {
             return "en";
          }
+         if(raw == "es")
+         {
+            return "es";
+         }
          return raw;
       }
       
@@ -993,6 +1168,10 @@ package com.sulake.habbo.window.utils.bobba
          if(value == "en")
          {
             return "hhus";
+         }
+         if(value == "es")
+         {
+            return "hhes";
          }
          if(value.indexOf("hh") == 0)
          {

@@ -35,6 +35,7 @@ cleanswf/scripts/**
 tools/inject-staging/
 tools/inject-log.txt
 tools/_ffdec_extract_help/
+tools/_export_check/
 
 # ADL / package outputs
 runtime/**

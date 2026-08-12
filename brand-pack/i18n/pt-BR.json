@@ -3,7 +3,7 @@
   "helper.error_title": "Erro",
   "helper.headline": "Customize a sua experiência de jogo",
   "helper.subtitle": "Utilize esse menu interativo para fazer as configurações iniciais :)",
-  "helper.version": "Versão 0.1.6-alpha",
+  "helper.version": "Versão 0.1.7-alpha",
   "helper.status.online": "Online",
   "helper.status.offline": "Offline",
   "helper.section.user": "Funções de usuário",
@@ -107,5 +107,22 @@
   "alert.bobbalooks_devwar_blocked": "Devwar fica desativado enquanto Ver visuais Bobba estiver off.",
 
   "sniper.title": "Tentando entrar",
-  "sniper.body": "O quarto está cheio, mas estamos tentando te conectar.\nChecagem {0} · {1}\nUsuários: {2}"
+  "sniper.body": "O quarto está cheio, mas estamos tentando te conectar.\nChecagem {0} · {1}\nUsuários: {2}",
+
+  "prices.window_title": "SecureHabbo",
+  "prices.loading": "Carregando preços…",
+  "prices.unavailable": "Sem dados de preço SecureHabbo para este item.",
+  "prices.stat.current": "Atual",
+  "prices.stat.average": "Média",
+  "prices.stat.volume": "Ofertas",
+  "prices.range.max_price": "Preço máx.",
+  "prices.range.min_price": "Preço mín.",
+  "prices.range.max_qty": "Quantidade máx.",
+  "prices.range.min_qty": "Quantidade mín.",
+  "prices.credit.prefix": "fornecido por ",
+  "marketplace.filter.all": "Todos",
+  "marketplace.filter.floor": "Chão",
+  "marketplace.filter.wall": "Parede",
+  "marketplace.filter.clothes": "Roupas",
+  "marketplace.filter.ltds": "LTDs"
 }

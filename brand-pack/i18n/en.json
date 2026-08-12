@@ -3,7 +3,7 @@
   "helper.error_title": "Error",
   "helper.headline": "Customize your game experience",
   "helper.subtitle": "Use this interactive menu to set up your preferences :)",
-  "helper.version": "Version 0.1.6-alpha",
+  "helper.version": "Version 0.1.7-alpha",
   "helper.status.online": "Online",
   "helper.status.offline": "Offline",
   "helper.section.user": "User features",
@@ -107,5 +107,22 @@
   "alert.bobbalooks_devwar_blocked": "Devwar is disabled while Show Bobba looks is off.",
 
   "sniper.title": "Trying to enter",
-  "sniper.body": "The room is full, but we're trying to connect you.\nCheck {0} · {1}\nUsers: {2}"
+  "sniper.body": "The room is full, but we're trying to connect you.\nCheck {0} · {1}\nUsers: {2}",
+
+  "prices.window_title": "SecureHabbo",
+  "prices.loading": "Loading prices…",
+  "prices.unavailable": "No SecureHabbo price data for this item.",
+  "prices.stat.current": "Current",
+  "prices.stat.average": "Average",
+  "prices.stat.volume": "Offers",
+  "prices.range.max_price": "Max price",
+  "prices.range.min_price": "Min price",
+  "prices.range.max_qty": "Max quantity",
+  "prices.range.min_qty": "Min quantity",
+  "prices.credit.prefix": "powered by ",
+  "marketplace.filter.all": "All",
+  "marketplace.filter.floor": "Floor",
+  "marketplace.filter.wall": "Wall",
+  "marketplace.filter.clothes": "Clothes",
+  "marketplace.filter.ltds": "LTDs"
 }

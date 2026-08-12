@@ -22,6 +22,13 @@
       "com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as",
     "com/sulake/habbo/friendbar/view/HabboFriendBarView.as",
     "com/sulake/habbo/catalog/habbicons/HabbiconController.as",
+    "com/sulake/habbo/catalog/marketplace/IMarketPlace.as",
+    "com/sulake/habbo/catalog/marketplace/IMarketPlaceVisualization.as",
+    "com/sulake/habbo/catalog/marketplace/MarketPlaceLogic.as",
+    "com/sulake/habbo/catalog/viewer/widgets/MarketPlaceCatalogWidget.as",
+    "com/sulake/habbo/catalog/viewer/widgets/MarketPlaceOwnItemsCatalogWidget.as",
+    "com/sulake/habbo/inventory/marketplace/MarketplaceModel.as",
+    "com/sulake/habbo/inventory/marketplace/MarketplaceView.as",
     "com/sulake/habbo/inventory/furni/FurniGridView.as",
     "com/sulake/habbo/navigator/HabboNavigator.as",
     "com/sulake/habbo/navigator/IncomingMessages.as",
@@ -35,6 +42,8 @@
       "com/sulake/habbo/window/utils/bobba/BobbaI18n.as",
       "com/sulake/habbo/window/utils/bobba/BobbaCrypto.as",
       "com/sulake/habbo/window/utils/bobba/BobbaWireCodec.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaLegacyPriceData.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaLegacyPriceDialog.as",
       "com/sulake/habbo/window/utils/bobba/BobbaBackendClient.as",
       "com/sulake/habbo/window/utils/bobba/BobbaGroupChatController.as",
       "com/sulake/habbo/window/utils/bobba/BobbaGroupWhisperController.as",
@@ -61,7 +70,8 @@
     "Do NOT stage IHabboWindowManagerComponent, EventDispatcherWrapper, or Core - FFDec breaks ABC slots.",
     "Do NOT stage HabboAvatarEditor.as - FFDec mangles partSet?.clubLevel sort comparators and breaks the editor (#1009).",
     "Bobba Helper (:bobba) and Trax Machine (:traxmachine / :trax) merge into HabboWindowManagerComponent as file-private classes.",
-    "BobbaI18n loads brand-pack/i18n/{en|pt-BR}.json (hhbr -> pt-BR, else en).",
-    "Trax assets deploy from traxmachine-pack/ (local or sibling) to traxmachine/ + local_include/traxmachine/."
+    "BobbaI18n loads brand-pack/i18n/{en|pt-BR|es}.json (hhbr -> pt-BR, hhes -> es, else en).",
+    "Trax assets deploy from traxmachine-pack/ (local or sibling) to traxmachine/ + local_include/traxmachine/.",
+    "SecureHabbo marketplace enrichment: stage MarketPlace* + inventory Marketplace*; BobbaLegacyPriceData merges with BobbaBackendClient."
   ]
 }
