@@ -6,7 +6,7 @@ package com.sulake.habbo.window.utils.bobba
    import flash.net.SharedObject;
    import flash.utils.ByteArray;
    
-   // Disk-backed Bobba UI strings. hhbr -> pt-BR, hhes -> es, everything else -> en.
+   // Disk-backed Bobba UI strings. hhbr -> pt-BR, hhes -> es, hhfr -> fr, everything else -> en.
    public class BobbaI18n
    {
       
@@ -17,6 +17,8 @@ package com.sulake.habbo.window.utils.bobba
       private static const LOCALE_PT_BR:String = "pt-BR";
       
       private static const LOCALE_ES:String = "es";
+      
+      private static const LOCALE_FR:String = "fr";
       
       private static var _loaded:Boolean = false;
       
@@ -147,6 +149,10 @@ package com.sulake.habbo.window.utils.bobba
          if(id == "hhes")
          {
             return LOCALE_ES;
+         }
+         if(id == "hhfr")
+         {
+            return LOCALE_FR;
          }
          return LOCALE_EN;
       }

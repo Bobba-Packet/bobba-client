@@ -21,11 +21,11 @@ A pixel-art window with the client's own toggles, persisted in the AirPlus `Shar
 | Mover item de parede / Move wall item | Enables the wall-item mover described below |
 | Chat em grupo · Sussurro em grupo · Desativar 67 · Anti-flood | **Chat em grupo** opens `:groupchat`. **Sussurro em grupo** enables avatar-menu / `:group` room whisper (Bobba sidecar only). **Desativar 67** is wired. **Anti-flood** stacks identical room bubbles from the same user as `Hi (2x)` instead of repeating them. |
 
-Labels come from `brand-pack/i18n/` — **pt-BR** on `hhbr`, **es** on `hhes`, **English** on every other hotel. See [Assets](assets.md#i18n).
+Labels come from `brand-pack/i18n/` — **pt-BR** on `hhbr`, **es** on `hhes`, **fr** on `hhfr`, **English** on every other hotel. See [Assets](assets.md#i18n).
 
 It also links to Discord and opens the Trax Machine. Toggles read and write through `GetBobbaToggle` / `SetBobbaToggle` on `LilithCustoms`, so adding a row is a label key in the locale JSON plus a case in that switch.
 
-The window itself is built with the pattern described in [Adding a custom window](custom-windows.md).
+The window itself is built with the pattern described in [Adding a custom window](custom-windows.md). A skull button on the bottom bar (next to the camera, `bobba_menu.png`) toggles the same window.
 
 ## Group whisper (`:group` / `:grupo`)
 

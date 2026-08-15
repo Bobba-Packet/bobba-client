@@ -1,0 +1,266 @@
+package com.sulake.habbo.window.utils.bobba
+{
+   import com.sulake.core.window.IWindowModel;
+   import com.sulake.core.window.components.IDisplayObjectWrapperController;
+   import com.sulake.core.window.components.IFrameController;
+   import com.sulake.core.window.events.WindowEvent;
+   import com.sulake.habbo.window.HabboWindowManagerComponent;
+   import flash.geom.Rectangle;
+   
+   public class BobbaPresetsEditor
+   {
+      
+      private static const FRAME_COLOR:uint = 0xff000000;
+      
+      private static const MOUSE_BLOCK_KEY:String = "bobba_presets";
+      
+      private var _windowManager:HabboWindowManagerComponent;
+      
+      private var _window:IFrameController;
+      
+      private var _canvas:IDisplayObjectWrapperController;
+      
+      private var _view:BobbaPresetsView;
+      
+      private var _controller:BobbaPresetsController;
+      
+      public function BobbaPresetsEditor(windowManager:HabboWindowManagerComponent)
+      {
+         super();
+         _windowManager = windowManager;
+      }
+      
+      public function get visible() : Boolean
+      {
+         return _window != null && Boolean(_window.visible);
+      }
+      
+      public function set visible(value:Boolean) : void
+      {
+         if(value)
+         {
+            if(_window == null)
+            {
+               createWindow();
+            }
+            else
+            {
+               _window.visible = true;
+               _window.activate();
+               if(_controller != null)
+               {
+                  _controller.refresh();
+               }
+               updateRoomMouseBlockRect();
+            }
+         }
+         else if(_window != null)
+         {
+            _window.visible = false;
+            removeRoomMouseBlockRect();
+         }
+      }
+      
+      public function startExportSelection() : void
+      {
+         if(_controller != null)
+         {
+            _controller.startExportSelection();
+         }
+      }
+      
+      public function startExportAll() : void
+      {
+         if(_controller != null)
+         {
+            _controller.startExportAll();
+         }
+      }
+      
+      public function startImport() : void
+      {
+         if(_controller != null)
+         {
+            _controller.startImport();
+         }
+      }
+      
+      public function startImportAt(x:int, y:int) : void
+      {
+         if(_controller != null)
+         {
+            _controller.startImportAt(x,y);
+         }
+      }
+      
+      public function abort() : void
+      {
+         if(_controller != null)
+         {
+            _controller.abort();
+         }
+      }
+      
+      public function dispose() : void
+      {
+         removeRoomMouseBlockRect();
+         if(_view != null)
+         {
+            _view.dispose();
+            _view = null;
+         }
+         if(_controller != null)
+         {
+            _controller.dispose();
+            _controller = null;
+         }
+         if(_window != null)
+         {
+            _window.dispose();
+            _window = null;
+         }
+         _canvas = null;
+         _windowManager = null;
+      }
+      
+      private function createWindow() : void
+      {
+         var layout:XML = null;
+         var built:IWindowModel = null;
+         var hdr:IWindowModel = null;
+         try
+         {
+            layout = <layout name="bobba_presets" width="432" height="484" version="0.1">
+					<window>
+						<frame x="0" y="0" width="432" height="484" params="33025" style="1" name="bobba_presets_frame" caption="Presets" color="0xff000000">
+							<children>
+								<display_object_wrapper x="0" y="0" width="420" height="448" params="16" style="0" name="bobba_presets_canvas"/>
+							</children>
+							<variables>
+								<var key="margin_left" value="6" type="int"/>
+								<var key="margin_top" value="30" type="int"/>
+								<var key="margin_right" value="6" type="int"/>
+								<var key="margin_bottom" value="6" type="int"/>
+							</variables>
+						</frame>
+					</window>
+				</layout>;
+            built = _windowManager.buildFromXML(layout,1);
+            _window = built as IFrameController;
+            if(_window == null)
+            {
+               alertError("buildFromXML did not return a frame");
+               return;
+            }
+            _window.caption = BobbaI18n.t("presets.title","Presets");
+            _window.color = FRAME_COLOR;
+            _window.margins.left = 6;
+            _window.margins.top = 30;
+            _window.margins.right = _window.width - 6;
+            _window.margins.bottom = _window.height - 6;
+            _window.procedure = windowProcedure;
+            _window.center();
+            _window.setParamFlag(257,false);
+            _window.setParamFlag(32768,true);
+            hdr = _window.header as IWindowModel;
+            if(hdr != null)
+            {
+               hdr.setParamFlag(257,true);
+               hdr.color = FRAME_COLOR;
+            }
+            _canvas = _window.findChildByName("bobba_presets_canvas") as IDisplayObjectWrapperController;
+            if(_canvas == null)
+            {
+               alertError("bobba_presets_canvas missing in layout");
+               return;
+            }
+            _canvas.x = 0;
+            _canvas.y = 0;
+            _canvas.width = _window.content.width;
+            _canvas.height = _window.content.height;
+            _canvas.setParamFlag(257,false);
+            _canvas.setParamFlag(32768,false);
+            _controller = new BobbaPresetsController(_windowManager);
+            _controller.attachHost(this);
+            _view = new BobbaPresetsView(_controller);
+            _controller.attachView(_view);
+            _canvas.setDisplayObject(_view);
+            _window.visible = true;
+            _window.activate();
+            updateRoomMouseBlockRect();
+         }
+         catch(e:Error)
+         {
+            alertError("createWindow: " + e.name + " #" + e.errorID + " " + e.message);
+         }
+      }
+      
+      private function updateRoomMouseBlockRect() : void
+      {
+         var rect:Rectangle = null;
+         try
+         {
+            if(_window == null || !_window.visible || _windowManager == null || _windowManager.roomEngine == null)
+            {
+               removeRoomMouseBlockRect();
+               return;
+            }
+            rect = new Rectangle();
+            _window.getGlobalRectangle(rect);
+            if(rect.isEmpty())
+            {
+               removeRoomMouseBlockRect();
+               return;
+            }
+            _windowManager.roomEngine.setMouseEventsDisabledRect(MOUSE_BLOCK_KEY,rect);
+         }
+         catch(errBlock:Error)
+         {
+         }
+      }
+      
+      private function removeRoomMouseBlockRect() : void
+      {
+         try
+         {
+            if(_windowManager != null && _windowManager.roomEngine != null)
+            {
+               _windowManager.roomEngine.removeMouseEventsDisabledRect(MOUSE_BLOCK_KEY);
+            }
+         }
+         catch(errRemove:Error)
+         {
+         }
+      }
+      
+      private function closeFromView() : void
+      {
+         visible = false;
+      }
+      
+      private function alertError(msg:String) : void
+      {
+         if(_windowManager != null)
+         {
+            _windowManager.simpleAlert(BobbaI18n.t("presets.title","Presets"),BobbaI18n.t("helper.error_title","Error"),msg);
+         }
+      }
+      
+      private function windowProcedure(event:WindowEvent, target:IWindowModel) : void
+      {
+         if(event == null || target == null)
+         {
+            return;
+         }
+         if(event.type == "WME_CLICK" && target.name == "header_button_close")
+         {
+            closeFromView();
+            return;
+         }
+         if(event.type == "WE_RELOCATED" || event.type == "WE_RESIZED" || event.type == "WME_UP")
+         {
+            updateRoomMouseBlockRect();
+         }
+      }
+   }
+}

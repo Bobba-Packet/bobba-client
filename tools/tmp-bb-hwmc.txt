@@ -1,0 +1,8 @@
+Aug 14, 2026 10:46:05 PM com.jpexs.decompiler.flash.SWF uniqueAS3Packs
+SEVERE: Duplicate pack path found (mx.core.IFlexAsset)!
+Aug 14, 2026 10:46:05 PM com.jpexs.decompiler.flash.SWF uniqueAS3Packs
+SEVERE: Duplicate pack path found (mx.core.ByteArrayAsset)!
+Aug 14, 2026 10:46:05 PM com.jpexs.decompiler.flash.SWF uniqueAS3Packs
+SEVERE: Duplicate pack path found (mx.core.mx_internal)!
+Aug 14, 2026 10:46:05 PM com.jpexs.decompiler.flash.SWF uniqueAS3Packs
+SEVERE: Duplicate pack path found (mx.core.mx_internal)!

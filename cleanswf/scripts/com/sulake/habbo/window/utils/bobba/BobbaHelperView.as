@@ -22,7 +22,7 @@ package com.sulake.habbo.window.utils.bobba
       
       public static const VIEW_W:int = 378;
       
-      public static const VIEW_H:int = 394;
+      public static const VIEW_H:int = 418;
       
       private static const LOGO_PATH:String = "bobba-client-logo-splash.png";
       
@@ -94,7 +94,7 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const EXTRA_Y:Number = 298;
       
-      private static const BUTTON_Y:Number = 352;
+      private static const BUTTON_Y:Number = 376;
       
       private static const DISCORD_X:Number = 70;
       
@@ -603,6 +603,7 @@ package com.sulake.habbo.window.utils.bobba
          addToggleRow("antiflood",BobbaI18n.t("helper.toggle.antiflood"),COL_RIGHT_X,SECTION2_Y + TITLE_TO_ROW + ROW_SPACING * 2);
          addSectionTitle(BobbaI18n.t("helper.section.extra"),EXTRA_LEFT_X,EXTRA_Y);
          addActionRow(BobbaI18n.t("helper.action.traxmachine"),EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW,null,"traxmachine");
+         addActionRow(BobbaI18n.t("helper.action.presets","Presets"),EXTRA_LEFT_X,EXTRA_Y + TITLE_TO_ROW + ROW_SPACING,null,"presets");
          addToggleRow("bobbalooks",BobbaI18n.t("helper.toggle.bobbalooks"),COL_RIGHT_X,EXTRA_Y + TITLE_TO_ROW);
       }
       
@@ -686,6 +687,13 @@ package com.sulake.habbo.window.utils.bobba
                if(_controller.WindowManager != null)
                {
                   _controller.WindowManager.displayTraxMachine();
+               }
+            }
+            else if(action == "presets")
+            {
+               if(_controller.WindowManager != null)
+               {
+                  _controller.WindowManager.displayPresets();
                }
             }
          }

@@ -97,11 +97,11 @@ package com.sulake.habbo.window.utils.bobba
          var hdr:IWindowModel = null;
          try
          {
-            layout = <layout name="bobba_helper" width="390" height="430" version="0.1">
+            layout = <layout name="bobba_helper" width="390" height="454" version="0.1">
 					<window>
-						<frame x="0" y="0" width="390" height="430" params="33025" style="1" name="bobba_helper_frame" caption="Bobba Helper" color="0xff000000">
+						<frame x="0" y="0" width="390" height="454" params="33025" style="1" name="bobba_helper_frame" caption="Bobba Helper" color="0xff000000">
 							<children>
-								<display_object_wrapper x="0" y="0" width="378" height="394" params="16" style="0" name="bobba_helper_canvas"/>
+								<display_object_wrapper x="0" y="0" width="378" height="418" params="16" style="0" name="bobba_helper_canvas"/>
 							</children>
 							<variables>
 								<var key="margin_left" value="6" type="int"/>

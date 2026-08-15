@@ -33,15 +33,17 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const CLIENT_SECRET:String = "why_4r3-you*r3ading_th15%l0l";
       
-      private static const CLIENT_VERSION:String = "0.1.7-alpha";
+      private static const CLIENT_VERSION:String = "0.1.8-alpha";
       
-      private static const CLIENT_BUILD:String = "BobbaClient-0.1.7-alpha";
+      private static const CLIENT_BUILD:String = "BobbaClient-0.1.8-alpha";
       
       private static const SOL_NAME:String = "BobbaClient";
       
       private static const HEARTBEAT_MS:int = 30000;
       
       private static const RECONNECT_MS:int = 5000;
+      
+      private static const RECONNECT_MAX_MS:int = 60000;
       
       private static const PROFILE_POLL_MS:int = 2000;
       
@@ -72,6 +74,10 @@ package com.sulake.habbo.window.utils.bobba
       private var _helloTimestamp:int = 0;
       
       private var _helloNonce:String = "";
+      
+      private var _clockOffsetSec:int = 0;
+      
+      private var _reconnectDelayMs:int = RECONNECT_MS;
       
       private var _authed:Boolean = false;
       
@@ -439,7 +445,7 @@ package com.sulake.habbo.window.utils.bobba
          try
          {
             setStatus(STATUS_HANDSHAKE,"hello");
-            _helloTimestamp = int(new Date().time / 1000);
+            _helloTimestamp = nowUnixSeconds();
             _helloNonce = BobbaCrypto.randomHex(16);
             if(_hotelId.length == 0)
             {
@@ -516,6 +522,10 @@ package com.sulake.habbo.window.utils.bobba
          if(id == BobbaWireCodec.CHALLENGE)
          {
             challenge = BobbaWireCodec.readString(payload);
+            if(payload.bytesAvailable >= 4)
+            {
+               applyServerTime(BobbaWireCodec.readInt(payload));
+            }
             hmac = BobbaCrypto.hmacSha256Hex(CLIENT_SECRET,challenge + "|" + _machineId + "|" + _helloTimestamp + "|" + _helloNonce);
             send(BobbaWireCodec.AUTH,[hmac]);
             return;
@@ -523,8 +533,9 @@ package com.sulake.habbo.window.utils.bobba
          if(id == BobbaWireCodec.AUTH_OK)
          {
             _authed = true;
+            _reconnectDelayMs = RECONNECT_MS;
             BobbaWireCodec.readString(payload);
-            BobbaWireCodec.readInt(payload);
+            applyServerTime(BobbaWireCodec.readInt(payload));
             BobbaWireCodec.readString(payload);
             BobbaWireCodec.readString(payload);
             setStatus(STATUS_CONNECTED,_hotelId);
@@ -540,6 +551,11 @@ package com.sulake.habbo.window.utils.bobba
          {
             reason = BobbaWireCodec.readInt(payload);
             message = BobbaWireCodec.readString(payload);
+            if(payload.bytesAvailable >= 4)
+            {
+               applyServerTime(BobbaWireCodec.readInt(payload));
+            }
+            bumpReconnectDelay();
             setStatus(STATUS_FAILED,"#" + reason + " " + message);
             closeSocket();
             scheduleReconnect();
@@ -547,6 +563,10 @@ package com.sulake.habbo.window.utils.bobba
          }
          if(id == BobbaWireCodec.HEARTBEAT_ACK)
          {
+            if(payload.bytesAvailable >= 4)
+            {
+               applyServerTime(BobbaWireCodec.readInt(payload));
+            }
             return;
          }
          if(id == BobbaWireCodec.SERVER_MESSAGE)
@@ -1003,8 +1023,33 @@ package com.sulake.habbo.window.utils.bobba
          {
             return;
          }
+         _reconnect.delay = _reconnectDelayMs;
          _reconnect.reset();
          _reconnect.start();
+      }
+      
+      private function nowUnixSeconds() : int
+      {
+         return int(new Date().time / 1000) + _clockOffsetSec;
+      }
+      
+      private function applyServerTime(serverTime:int) : void
+      {
+         var localSec:int = 0;
+         if(serverTime <= 0)
+         {
+            return;
+         }
+         localSec = int(new Date().time / 1000);
+         _clockOffsetSec = serverTime - localSec;
+      }
+      
+      private function bumpReconnectDelay() : void
+      {
+         if(_reconnectDelayMs < RECONNECT_MAX_MS)
+         {
+            _reconnectDelayMs = Math.min(RECONNECT_MAX_MS,_reconnectDelayMs * 2);
+         }
       }
       
       private function send(id:int, fields:Array) : void

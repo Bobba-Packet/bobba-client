@@ -34,6 +34,8 @@ You need Java, the FFDec CLI, an AIR SDK, the upstream `HabboAir.swf` at the rep
 | [Editing ActionScript](docs/editing-actionscript.md) | `patches/manifest.json`, the merge trick, FFDec rules, chat commands |
 | [Assets](docs/assets.md) | How runtime paths resolve, and what lives in each pack |
 | [Adding a custom window](docs/custom-windows.md) | Editor/View pattern used by Bobba Helper and Trax Machine |
+| [Native Presets roadmap](docs/presets-roadmap.md) | Product outline (phases, window, overlay) |
+| [Native Presets plan](docs/presets-plan.md) | Detailed implementation plan (classes, algorithms, checklists) |
 | [Package and release](docs/packaging.md) | `dist\airbobba`, the patch zip, and the launcher download URLs |
 | [Troubleshooting](docs/troubleshooting.md) | Symptom → cause table |
 | [Conventions](docs/conventions.md) | Project rules, licensing and brand notes |
