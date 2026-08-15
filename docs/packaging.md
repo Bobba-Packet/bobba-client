@@ -3,8 +3,8 @@
 [← Back to README](../README.md)
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\package-client.ps1 -Version 0.1.7-alpha
-powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.7-alpha
+powershell -ExecutionPolicy Bypass -File tools\package-client.ps1 -Version 0.1.8-alpha
+powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.8-alpha
 ```
 
 Both scripts need `HabboAir_bobba.swf`, so run the inject first — see [Getting started](getting-started.md#run-it-edit--inject--debug).

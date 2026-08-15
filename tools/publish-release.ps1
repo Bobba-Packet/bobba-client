@@ -3,12 +3,12 @@
 #
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1
-#   powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.7-alpha
+#   powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 -Version 0.1.8-alpha
 #
 # Requires: HabboAir_bobba.swf (run inject first), gh auth, network for AirPlus patch base.
 
 param(
-    [string]$Version = "0.1.7-alpha",
+    [string]$Version = "0.1.8-alpha",
     [switch]$SkipUpload
 )
 
@@ -111,7 +111,12 @@ if ($SkipUpload) {
 $notes = @(
     "## Bobba Client $Version"
     ""
-    "Injected HabboAirPlus SWF + Trax Machine + external brand pack / room placeholders."
+    "Native Presets, bottom-bar Bobba menu, French locale, and Builders Club block import."
+    ""
+    "- **Presets** (`:presets` / Helper): export and import G-Presets-compatible room JSON, including wired, snapshot bindings, ads backgrounds, and stack-tile placement."
+    "- **Builders Club blocks**: color variants (`classname*n*`) resolve to the warehouse offer and place without inventory copies."
+    "- **Bobba menu** button on the bottom bar (next to Camera) opens Helper."
+    "- **French** UI strings on `hhfr` (`brand-pack/i18n/fr.json`)."
     ""
     "Launcher downloads HabboAir.swf + HabboAirBobbaPatch.zip from the latest tag."
     "Install: %AppData%\packet.bobba.launcher\downloads\airbobba\{version}"
