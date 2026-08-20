@@ -148,7 +148,7 @@ package com.sulake.habbo.window.utils.bobba
          _window.caption = BobbaI18n.t("prices.window_title");
          _window.visible = true;
          _window.activate();
-         _window.center();
+         positionNextToShopWindow();
          paintStatBackgrounds();
          updateDayLabels();
          styleCreditLink();
@@ -1323,6 +1323,47 @@ package com.sulake.habbo.window.utils.bobba
          return text;
       }
       
+      private function positionNextToShopWindow() : void
+      {
+         var catalog:* = null;
+         var shop:IWindowModel = null;
+         var desktop:IWindowModel = null;
+         if(_window == null || _windowManager == null)
+         {
+            return;
+         }
+         try
+         {
+            catalog = _windowManager.catalog;
+            if(catalog != null && catalog.mainContainer != null)
+            {
+               shop = catalog.mainContainer as IWindowModel;
+            }
+            if(shop != null && shop.visible)
+            {
+               _window.x = int(shop.x + shop.width);
+               _window.y = int(shop.y);
+               desktop = _window.desktop;
+               if(desktop != null)
+               {
+                  if(_window.x + _window.width > desktop.width)
+                  {
+                     _window.x = Math.max(0,int(shop.x - _window.width));
+                  }
+                  if(_window.y + _window.height > desktop.height)
+                  {
+                     _window.y = Math.max(0,desktop.height - _window.height);
+                  }
+               }
+               return;
+            }
+         }
+         catch(err:Error)
+         {
+         }
+         _window.center();
+      }
+      
       private function createWindow() : void
       {
          var layout:XML = null;
@@ -1333,8 +1374,8 @@ package com.sulake.habbo.window.utils.bobba
 					<window>
 						<frame x="0" y="0" width="340" height="534" params="33025" style="3" name="bobba_sh_frame" caption="SecureHabbo">
 							<children>
-								<bitmap x="1" y="0" width="337" height="148" params="16" style="0" name="item_image"/>
-								<display_object_wrapper x="1" y="0" width="337" height="148" params="16" style="0" name="item_preview"/>
+								<bitmap x="1" y="3" width="337" height="148" params="16" style="0" name="item_image"/>
+								<display_object_wrapper x="1" y="3" width="337" height="148" params="16" style="0" name="item_preview"/>
 								<border x="6" y="152" width="52" height="52" params="16" style="3" name="item_icon_box">
 									<children>
 										<bitmap x="2" y="2" width="48" height="48" params="16" style="0" name="item_icon"/>

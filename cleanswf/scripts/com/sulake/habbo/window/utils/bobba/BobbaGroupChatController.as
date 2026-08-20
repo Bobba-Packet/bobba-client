@@ -362,6 +362,11 @@
          if(_backend != null)
          {
             _backend.listPendingInvites();
+            _backend.listGroups();
+            if(_activeGroupId != null && _activeGroupId.length > 0 && _chatEditor != null && _chatEditor.visible)
+            {
+               _backend.openGroup(_activeGroupId);
+            }
          }
       }
       

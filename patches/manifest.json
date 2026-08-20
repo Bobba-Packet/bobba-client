@@ -19,7 +19,9 @@
       "com/sulake/habbo/freeflowchat/HabboFreeFlowChat.as",
       "com/sulake/habbo/freeflowchat/viewer/visualization/PooledChatBubble.as",
       "com/sulake/habbo/ui/widget/avatarinfo/AvatarMenuView.as",
+      "com/sulake/habbo/messenger/MainView.as",
       "com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as",
+      "com/sulake/habbo/ui/widget/chatinput/RoomChatInputView.as",
     "com/sulake/habbo/friendbar/view/HabboFriendBarView.as",
     "com/sulake/habbo/catalog/habbicons/HabbiconController.as",
     "com/sulake/habbo/catalog/marketplace/IMarketPlace.as",
@@ -37,7 +39,10 @@
       "com/sulake/habbo/roomevents/wired_setup/UserDefinedRoomEventsCtrl.as",
       "com/sulake/habbo/ui/RoomDesktop.as",
       "com/sulake/habbo/room/RoomEngine.as",
-      "com/sulake/habbo/room/RoomObjectEventHandler.as"
+      "com/sulake/habbo/room/RoomObjectEventHandler.as",
+      "com/sulake/habbo/window/utils/floorplaneditor/BCFloorPlanEditor.as",
+      "com/sulake/habbo/window/utils/floorplaneditor/HeightMapEditor.as",
+      "com/sulake/habbo/window/utils/floorplaneditor/FloorPlanCache.as"
   ],
   "merge": {
     "host": "com/sulake/habbo/window/HabboWindowManagerComponent.as",
@@ -73,6 +78,8 @@
       "com/sulake/habbo/window/utils/bobba/BobbaWiredCache.as",
       "com/sulake/habbo/window/utils/bobba/BobbaWiredFetch.as",
       "com/sulake/habbo/window/utils/bobba/BobbaTilePicker.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaNpc.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaCommandAutocomplete.as",
       "com/sulake/habbo/window/utils/bobba/BobbaPresetGhost.as",
       "com/sulake/habbo/window/utils/bobba/BobbaPresetExporter.as",
       "com/sulake/habbo/window/utils/bobba/BobbaAvailability.as",
@@ -94,6 +101,7 @@
     "Do NOT stage IHabboWindowManagerComponent, EventDispatcherWrapper, or Core - FFDec breaks ABC slots.",
     "Do NOT stage HabboAvatarEditor.as - FFDec mangles partSet?.clubLevel sort comparators and breaks the editor (#1009).",
     "Bobba Helper (:bobba) and Trax Machine (:traxmachine / :trax) merge into HabboWindowManagerComponent as file-private classes.",
+    ":npc picks a room tile then spam-walks to it; :npcdelay sets the interval (min 1ms).",
     "Bottom-bar skull button (bobba_menu.png, next to CAMERA) is BobbaToolbarButton, also merged into HabboWindowManagerComponent.",
     "Native Presets (:presets) dump/export shell also merges into HabboWindowManagerComponent.",
     "Wired cache: incoming WiredFurni* events. Export fetch sends Open and skips prepareForUpdate so the UI stays closed.",
@@ -101,6 +109,9 @@
     "Trax assets deploy from traxmachine-pack/ (local or sibling) to traxmachine/ + local_include/traxmachine/.",
     "SecureHabbo marketplace enrichment: stage MarketPlace* + inventory Marketplace*; BobbaLegacyPriceData merges with BobbaBackendClient.",
     "Placement: WME_RIGHT_CLICK on RoomDesktop cycles floor-furni preview state (scroll still rotates). RoomEngine.changeObjectState keeps SelectedRoomObjectData.state in sync so the ghost does not reset on tile move.",
-    "BC Place More copies the selected floor item direction and state into the first ghost, then keeps the last ghost dir/state on each repeat (RoomObjectEventHandler)."
+    "BC Place More copies the selected floor item direction and state into the first ghost, then keeps the last ghost dir/state on each repeat (RoomObjectEventHandler).",
+    "Messenger MainView: clone report_button into remove_friend_button; confirm dialog before RemoveFriendMessageComposer.",
+    "Floor plan editor (:floor): tooltips, height number, live preview, numpad-minus fix on BCFloorPlanEditor + HeightMapEditor.",
+    "Command autocomplete: :prefix shows inline faded completion in chat input; arrows cycle, Tab accepts."
   ]
 }

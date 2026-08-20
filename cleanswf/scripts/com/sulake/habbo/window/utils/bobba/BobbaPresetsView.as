@@ -47,11 +47,11 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const PREVIEW_W:int = 148;
       
-      private static const BTN_Y:int = 268;
+      private static const BTN_Y:int = 266;
       
-      private static const READY_Y:int = 314;
+      private static const READY_Y:int = 334;
       
-      private static const LOG_Y:int = 338;
+      private static const LOG_Y:int = 350;
       
       private var _controller:BobbaPresetsController;
       
@@ -88,6 +88,8 @@ package com.sulake.habbo.window.utils.bobba
       private var _exportBtn:Sprite;
       
       private var _exportLabel:TextField;
+      
+      private var _exportAllBtn:Sprite;
       
       private var _folderBtn:Sprite;
       
@@ -180,6 +182,7 @@ package com.sulake.habbo.window.utils.bobba
          _dotRights = null;
          _exportBtn = null;
          _exportLabel = null;
+         _exportAllBtn = null;
          _folderBtn = null;
          _checkBtn = null;
          _importBtn = null;
@@ -366,6 +369,10 @@ package com.sulake.habbo.window.utils.bobba
          if(_exportBtn != null)
          {
             _exportBtn.visible = !naming;
+         }
+         if(_exportAllBtn != null)
+         {
+            _exportAllBtn.visible = !naming && !running && !picking;
          }
          if(_folderBtn != null)
          {
@@ -611,8 +618,9 @@ package com.sulake.habbo.window.utils.bobba
          _exportBtn = addBtn(BobbaI18n.t("presets.action.exportSelection","Export selection"),12,BTN_Y,onExport);
          _exportLabel = _exportBtn.getChildAt(0) as TextField;
          _folderBtn = addBtn(BobbaI18n.t("presets.action.openFolder","Open folder"),216,BTN_Y,onFolder);
-         _checkBtn = addBtn(BobbaI18n.t("presets.action.checkItems","Check items"),12,BTN_Y + 24,onCheck);
+         _exportAllBtn = addBtn(BobbaI18n.t("presets.action.exportAll","Copy full room"),12,BTN_Y + 24,onExportAll);
          _importBtn = addBtn(BobbaI18n.t("presets.action.importHere","Import here"),216,BTN_Y + 24,onImport);
+         _checkBtn = addBtn(BobbaI18n.t("presets.action.checkItems","Check items"),12,BTN_Y + 48,onCheck);
       }
       
       private function buildNameRow() : void
@@ -704,6 +712,15 @@ package com.sulake.habbo.window.utils.bobba
             return;
          }
          _controller.startExportSelection();
+      }
+      
+      private function onExportAll(e:MouseEvent) : void
+      {
+         if(_controller == null)
+         {
+            return;
+         }
+         _controller.startExportAll();
       }
       
       private function onNameSave(e:MouseEvent) : void

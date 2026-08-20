@@ -91,6 +91,38 @@ package com.sulake.habbo.window.utils.bobba
          return true;
       }
       
+      public function startTile(onTile:Function, onAbort:Function, stage:Stage) : Boolean
+      {
+         stop();
+         if(_windowManager == null || _windowManager.roomEngine == null || onTile == null || stage == null)
+         {
+            return false;
+         }
+         _onTile = onTile;
+         _onAbort = onAbort;
+         _stage = stage;
+         _rootMode = true;
+         _hoverOk = false;
+         try
+         {
+            _windowManager.roomEngine.setMoveBlocked(true);
+         }
+         catch(eBlock:Error)
+         {
+         }
+         _active = true;
+         _ignoreUntil = getTimer() + 250;
+         hookKey();
+         _stage.addEventListener("click",onStageClick);
+         if(_timer == null)
+         {
+            _timer = new Timer(50,0);
+            _timer.addEventListener("timer",onRootTick);
+         }
+         _timer.start();
+         return true;
+      }
+      
       public function startRoot(cfg:BobbaPresetConfig, onTile:Function, onAbort:Function, stage:Stage) : Boolean
       {
          stop();

@@ -383,13 +383,17 @@ package com.sulake.habbo.window.utils.bobba
       
       private function attemptConnect() : void
       {
-         if(_disposed || _authed)
+         if(_disposed)
+         {
+            return;
+         }
+         if(isConnected)
          {
             return;
          }
          if(_socket != null)
          {
-            return;
+            closeSocket();
          }
          refreshHotelFromSol();
          readSessionIdentity();
@@ -399,6 +403,23 @@ package com.sulake.habbo.window.utils.bobba
             return;
          }
          connect();
+      }
+      
+      private function handleDisconnect(detail:String, failed:Boolean = false) : void
+      {
+         _authed = false;
+         _backendReadyNotified = false;
+         if(_heartbeat != null)
+         {
+            _heartbeat.stop();
+         }
+         closeSocket();
+         if(_disposed)
+         {
+            return;
+         }
+         setStatus(failed ? STATUS_FAILED : STATUS_DISCONNECTED,detail);
+         scheduleReconnect();
       }
       
       private function connect() : void
@@ -433,9 +454,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          catch(e:Error)
          {
-            setStatus(STATUS_FAILED,e.message);
-            closeSocket();
-            scheduleReconnect();
+            handleDisconnect(e.message,true);
          }
       }
       
@@ -456,9 +475,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          catch(connectErr:Error)
          {
-            setStatus(STATUS_FAILED,connectErr.message);
-            closeSocket();
-            scheduleReconnect();
+            handleDisconnect(connectErr.message,true);
          }
       }
       
@@ -483,9 +500,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          catch(err:Error)
          {
-            setStatus(STATUS_FAILED,err.message);
-            closeSocket();
-            scheduleReconnect();
+            handleDisconnect(err.message,true);
          }
       }
       
@@ -556,9 +571,7 @@ package com.sulake.habbo.window.utils.bobba
                applyServerTime(BobbaWireCodec.readInt(payload));
             }
             bumpReconnectDelay();
-            setStatus(STATUS_FAILED,"#" + reason + " " + message);
-            closeSocket();
-            scheduleReconnect();
+            handleDisconnect("#" + reason + " " + message,true);
             return;
          }
          if(id == BobbaWireCodec.HEARTBEAT_ACK)
@@ -894,7 +907,7 @@ package com.sulake.habbo.window.utils.bobba
       {
          try
          {
-            if(!_authed)
+            if(!isConnected)
             {
                attemptConnect();
                return;
@@ -997,24 +1010,12 @@ package com.sulake.habbo.window.utils.bobba
       
       private function onSocketClose(e:Event) : void
       {
-         _authed = false;
-         if(_heartbeat != null)
-         {
-            _heartbeat.stop();
-         }
-         if(!_disposed)
-         {
-            setStatus(STATUS_DISCONNECTED,"closed");
-            scheduleReconnect();
-         }
+         handleDisconnect("closed");
       }
       
       private function onSocketError(e:Event) : void
       {
-         _authed = false;
-         setStatus(STATUS_FAILED,String(e));
-         closeSocket();
-         scheduleReconnect();
+         handleDisconnect(String(e),true);
       }
       
       private function scheduleReconnect() : void
@@ -1067,9 +1068,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          catch(sendErr:Error)
          {
-            setStatus(STATUS_FAILED,sendErr.message);
-            closeSocket();
-            scheduleReconnect();
+            handleDisconnect(sendErr.message,true);
          }
       }
       

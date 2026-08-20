@@ -16,6 +16,8 @@ cleanswf/scripts/**
 !cleanswf/scripts/com/
 !cleanswf/scripts/com/sulake/
 !cleanswf/scripts/com/sulake/habbo/
+!cleanswf/scripts/com/sulake/habbo/messenger/
+!cleanswf/scripts/com/sulake/habbo/messenger/MainView.as
 !cleanswf/scripts/com/sulake/habbo/window/
 !cleanswf/scripts/com/sulake/habbo/window/utils/
 !cleanswf/scripts/com/sulake/habbo/window/utils/bobba/

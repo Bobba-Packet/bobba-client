@@ -204,6 +204,7 @@ package com.sulake.habbo.window.utils.bobba
          }
          _pendingRect = box;
          _mode = MODE_NAME;
+         logLine(BobbaI18n.t("presets.log.exportAll","Copying full room"));
          logLine(BobbaI18n.format("presets.overlay.corner2",int(box.x1) - int(box.x0) + 1,int(box.y1) - int(box.y0) + 1));
          logLine(BobbaI18n.t("presets.overlay.name","Name this preset"));
          refresh();
