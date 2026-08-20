@@ -33,9 +33,9 @@ package com.sulake.habbo.window.utils.bobba
       
       private static const CLIENT_SECRET:String = "why_4r3-you*r3ading_th15%l0l";
       
-      private static const CLIENT_VERSION:String = "0.1.8-alpha";
+      private static const CLIENT_VERSION:String = "0.1.9-alpha";
       
-      private static const CLIENT_BUILD:String = "BobbaClient-0.1.8-alpha";
+      private static const CLIENT_BUILD:String = "BobbaClient-0.1.9-alpha";
       
       private static const SOL_NAME:String = "BobbaClient";
       
