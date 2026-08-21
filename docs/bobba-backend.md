@@ -52,3 +52,29 @@ Ephemeral per-room multi-recipient whisper over the same sidecar (packets `60` /
 | 63 | `BobbaUsersResult` | S→C | count, then each `nickname` + `registered` bool |
 
 The backend fans out to online connections for the same `hotelId` (lookup by nickname). No DB history. The client owns the recipient list and clears it on room enter. The avatar-menu **Sussurro em grupo** button is shown only for nicknames registered in Bobba (`LookupBobbaUsers`).
+
+## Bobba avatar FX (NPCkey / BobbaKey)
+
+Client-only. The Habbo hotel is never told. Other Bobba clients in the same room see it over packets `80`–`83`. Pick them from the wardrobe Effects tab.
+
+| ID | Name | Direction | Fields |
+|----|------|-----------|--------|
+| 80 | `SetRoomAvatarEffect` | C→S | `roomKey`, `effectId` (`0`, `9001` BobbaKey, `9002` NPCkey) |
+| 81 | `RoomAvatarEffect` | S→C | `nickname`, `effectId`, `roomKey` |
+| 82 | `SyncRoomAvatarEffects` | C→S | `roomKey` (empty when leaving) |
+| 83 | `RoomAvatarEffectsState` | S→C | `roomKey`, count × (`nickname`, `effectId`) |
+
+`NPCkey.swf` (fx 9002) and `BobbaKey.swf` (fx 9001) ship in `local_include/`. Official Metakey stays on fx 212.
+
+## Bobba Clothes / DevWar
+
+Client-only. The Habbo hotel is never told. Other Bobba clients in the same room see DevWar / Bobba Clothes over packets `84`–`87`.
+
+| ID | Name | Direction | Fields |
+|----|------|-----------|--------|
+| 84 | `SetRoomAvatarFigure` | C→S | `roomKey`, `figure`, `sex` |
+| 85 | `RoomAvatarFigure` | S→C | `nickname`, `figure`, `sex`, `roomKey` |
+| 86 | `SyncRoomAvatarFigures` | C→S | `roomKey` (empty when leaving) |
+| 87 | `RoomAvatarFiguresState` | S→C | `roomKey`, count × (`nickname`, `figure`, `sex`) |
+
+Empty `figure` restores the hotel look on other Bobba clients. Camera shots still swap everyone back to hotel clothes for the capture.

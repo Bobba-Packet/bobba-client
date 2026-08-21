@@ -114,6 +114,12 @@
   "alert.npc_delay_current": "Le délai NPC est de {0} ms.",
   "alert.npc_noroom": "Entre d'abord dans une salle.",
   "alert.npc_pickfail": "Impossible de démarrer le sélecteur de tile.",
+  "alert.npckey_on": "NPCkey activé. Visible uniquement sur Bobba.",
+  "alert.npckey_off": "NPCkey désactivé.",
+  "alert.bobbakey_on": "BobbaKey activé. Visible uniquement sur Bobba.",
+  "alert.bobbakey_off": "BobbaKey désactivé.",
+  "fx.9002": "NPCkey",
+  "fx.9001": "BobbaKey",
 
   "sniper.title": "Tentative d'entrée",
   "sniper.body": "La salle est pleine, mais on essaie de te connecter.\nVérifie {0} · {1}\nUtilisateurs : {2}",

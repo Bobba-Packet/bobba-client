@@ -114,6 +114,12 @@
   "alert.npc_delay_current": "NPC delay is {0} ms.",
   "alert.npc_noroom": "Enter a room first.",
   "alert.npc_pickfail": "Could not start tile picker.",
+  "alert.npckey_on": "NPCkey on. Visible to Bobba clients only.",
+  "alert.npckey_off": "NPCkey off.",
+  "alert.bobbakey_on": "BobbaKey on. Visible to Bobba clients only.",
+  "alert.bobbakey_off": "BobbaKey off.",
+  "fx.9002": "NPCkey",
+  "fx.9001": "BobbaKey",
 
   "sniper.title": "Trying to enter",
   "sniper.body": "The room is full, but we're trying to connect you.\nCheck {0} · {1}\nUsers: {2}",

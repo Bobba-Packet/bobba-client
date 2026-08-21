@@ -648,10 +648,14 @@ package com.sulake.habbo.window.utils.bobba
       
       private function addToggleRow(key:String, labelText:String, x:Number, y:Number) : void
       {
-         var selected:Boolean = false;
+         var selected:Boolean = key == "bobbalooks";
          if(_controller != null)
          {
             selected = _controller.GetBobbaToggle(key) == true;
+            if(key == "bobbalooks" && _controller.BobbaLooksChoiceSaved != true)
+            {
+               selected = true;
+            }
          }
          var row:Sprite = makeRow(labelText,x,y,selected,null);
          row.addEventListener(MouseEvent.CLICK,onRowClick);
@@ -720,6 +724,10 @@ package com.sulake.habbo.window.utils.bobba
             if(box != null && _checkOff != null)
             {
                selected = _controller.GetBobbaToggle(key) == true;
+               if(key == "bobbalooks" && _controller.BobbaLooksChoiceSaved != true)
+               {
+                  selected = true;
+               }
                box.bitmapData = selected ? _checkOn : _checkOff;
             }
          }

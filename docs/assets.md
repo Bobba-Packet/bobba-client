@@ -31,7 +31,7 @@ English is also the missing-key fallback. Edit the JSON under `brand-pack/i18n/`
 
 ## `client-assets/local_include/` → `local_include/`
 
-`HabboRoomContent.swf`, `PlaceHolderFurniture.swf`, `PlaceHolderPet.swf`, `PlaceHolderWallItem.swf`, `SelectionArrow.swf`, `TileCursor.swf`. AirPlus checks `FileProxy.localFileExists` before hitting the CDN; without these you get `COMPONENT_EVENT_ERROR` right after login.
+`HabboRoomContent.swf`, `PlaceHolderFurniture.swf`, `PlaceHolderPet.swf`, `PlaceHolderWallItem.swf`, `SelectionArrow.swf`, `TileCursor.swf`, and Bobba-only avatar FX (`NPCkey.swf` as fx 9002, `BobbaKey.swf` as fx 9001). Official Metakey (fx 212) still loads from the hotel CDN. AirPlus checks `FileProxy.localFileExists` before hitting the CDN; without the placeholders you get `COMPONENT_EVENT_ERROR` right after login. NPCkey and BobbaKey are picked from the wardrobe Effects tab and never talk to the Habbo hotel — other Bobba clients see them via the sidecar.
 
 ## `traxmachine-pack/` → `traxmachine/`
 

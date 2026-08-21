@@ -80,6 +80,22 @@ package com.sulake.habbo.window.utils.bobba
       
       public static const LEGACY_PRICE_RESULT:int = 71;
       
+      public static const SET_ROOM_AVATAR_EFFECT:int = 80;
+      
+      public static const ROOM_AVATAR_EFFECT:int = 81;
+      
+      public static const SYNC_ROOM_AVATAR_EFFECTS:int = 82;
+      
+      public static const ROOM_AVATAR_EFFECTS_STATE:int = 83;
+      
+      public static const SET_ROOM_AVATAR_FIGURE:int = 84;
+      
+      public static const ROOM_AVATAR_FIGURE:int = 85;
+      
+      public static const SYNC_ROOM_AVATAR_FIGURES:int = 86;
+      
+      public static const ROOM_AVATAR_FIGURES_STATE:int = 87;
+      
       public function BobbaWireCodec()
       {
          super();

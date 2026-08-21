@@ -136,7 +136,6 @@ package com.sulake.habbo.window.utils.bobba
                return false;
             }
             applySelection(input);
-            hide();
             return true;
          }
          if(keyCode == Keyboard.ESCAPE)
@@ -400,15 +399,21 @@ package com.sulake.habbo.window.utils.bobba
       private function applySelection(input:ITextFieldWindow) : void
       {
          var command:String = null;
-         var suffix:String = null;
+         var caret:int = 0;
          if(!_active || _matches.length == 0 || input == null)
          {
             return;
          }
          command = String(_matches[_selectedIndex]);
-         suffix = " ";
-         input.text = command + suffix;
-         input.setSelection(command.length + suffix.length,command.length + suffix.length);
+         if(command == null || command.length == 0)
+         {
+            return;
+         }
+         input.text = command + " ";
+         caret = input.text.length;
+         input.setSelection(caret,caret);
+         _lastPrefix = "";
+         _prefixLength = caret;
       }
       
       private function restoreCaret(input:ITextFieldWindow) : void

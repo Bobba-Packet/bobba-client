@@ -12,8 +12,13 @@
     "HabboAir.as",
     "com/sulake/habbo/toolbar/extensions/PurseAreaExtension.as",
     "com/sulake/habbo/toolbar/HabboToolbar.as",
-    "com/sulake/habbo/avatar/AvatarEditorView.as",
-    "com/sulake/habbo/avatar/HabboAvatarEditorManager.as",
+      "com/sulake/habbo/avatar/AvatarEditorView.as",
+      "com/sulake/habbo/avatar/HabboAvatarEditorManager.as",
+      "com/sulake/habbo/avatar/AvatarAssetDownloadManager.as",
+      "com/sulake/habbo/avatar/AvatarAssetDownloadLibrary.as",
+      "com/sulake/habbo/avatar/common/CategoryBaseModel.as",
+      "com/sulake/habbo/avatar/effects/EffectsModel.as",
+      "com/sulake/habbo/avatar/effects/EffectsParamView.as",
       "com/sulake/habbo/window/LilithCustoms.as",
       "com/sulake/habbo/window/HabboWindowManagerComponent.as",
       "com/sulake/habbo/freeflowchat/HabboFreeFlowChat.as",
@@ -38,7 +43,9 @@
     "com/sulake/habbo/navigator/SimpleAlertView.as",
       "com/sulake/habbo/roomevents/wired_setup/UserDefinedRoomEventsCtrl.as",
       "com/sulake/habbo/ui/RoomDesktop.as",
+      "com/sulake/habbo/ui/widget/camera/CameraViewFinder.as",
       "com/sulake/habbo/room/RoomEngine.as",
+      "com/sulake/habbo/avatar/EffectAssetDownloadManager.as",
       "com/sulake/habbo/room/RoomObjectEventHandler.as",
       "com/sulake/habbo/window/utils/floorplaneditor/BCFloorPlanEditor.as",
       "com/sulake/habbo/window/utils/floorplaneditor/HeightMapEditor.as",
@@ -79,6 +86,8 @@
       "com/sulake/habbo/window/utils/bobba/BobbaWiredFetch.as",
       "com/sulake/habbo/window/utils/bobba/BobbaTilePicker.as",
       "com/sulake/habbo/window/utils/bobba/BobbaNpc.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaAvatarEffects.as",
+      "com/sulake/habbo/window/utils/bobba/BobbaAvatarLooks.as",
       "com/sulake/habbo/window/utils/bobba/BobbaCommandAutocomplete.as",
       "com/sulake/habbo/window/utils/bobba/BobbaPresetGhost.as",
       "com/sulake/habbo/window/utils/bobba/BobbaPresetExporter.as",
@@ -112,6 +121,7 @@
     "BC Place More copies the selected floor item direction and state into the first ghost, then keeps the last ghost dir/state on each repeat (RoomObjectEventHandler).",
     "Messenger MainView: clone report_button into remove_friend_button; confirm dialog before RemoveFriendMessageComposer.",
     "Floor plan editor (:floor): tooltips, height number, live preview, numpad-minus fix on BCFloorPlanEditor + HeightMapEditor.",
-    "Command autocomplete: :prefix shows inline faded completion in chat input; arrows cycle, Tab accepts."
+    "Command autocomplete: :prefix shows inline faded completion in chat input; arrows cycle, Tab accepts.",
+    "Bobba avatar FX (NPCkey 9002 / BobbaKey 9001) appear in the wardrobe Effects tab. Official Metakey 212 is unchanged. Sidecar-only; EffectAssetDownloadManager loads local_include/NPCkey.swf and BobbaKey.swf."
   ]
 }

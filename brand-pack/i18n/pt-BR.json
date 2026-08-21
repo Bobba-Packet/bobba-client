@@ -114,6 +114,12 @@
   "alert.npc_delay_current": "Delay do NPC está em {0} ms.",
   "alert.npc_noroom": "Entre em um quarto primeiro.",
   "alert.npc_pickfail": "Não foi possível iniciar o seletor de tile.",
+  "alert.npckey_on": "NPCkey ligado. Só clientes Bobba veem.",
+  "alert.npckey_off": "NPCkey desligado.",
+  "alert.bobbakey_on": "BobbaKey ligado. Só clientes Bobba veem.",
+  "alert.bobbakey_off": "BobbaKey desligado.",
+  "fx.9002": "NPCkey",
+  "fx.9001": "BobbaKey",
 
   "sniper.title": "Tentando entrar",
   "sniper.body": "O quarto está cheio, mas estamos tentando te conectar.\nChecagem {0} · {1}\nUsuários: {2}",

@@ -97,6 +97,10 @@ package com.sulake.habbo.window.utils.bobba
       
       private var _whisperListener:*;
       
+      private var _effectListener:*;
+      
+      private var _lookListener:*;
+      
       private var _legacyPriceCallbacks:Object;
       
       public function BobbaBackendClient(windowManager:*, host:String = null, port:int = 0)
@@ -125,6 +129,16 @@ package com.sulake.habbo.window.utils.bobba
       public function setWhisperListener(listener:*) : void
       {
          _whisperListener = listener;
+      }
+      
+      public function setEffectListener(listener:*) : void
+      {
+         _effectListener = listener;
+      }
+      
+      public function setLookListener(listener:*) : void
+      {
+         _lookListener = listener;
       }
       
       public function get status() : String
@@ -198,6 +212,8 @@ package com.sulake.habbo.window.utils.bobba
          _windowManager = null;
          _groupListener = null;
          _whisperListener = null;
+         _effectListener = null;
+         _lookListener = null;
          _legacyPriceCallbacks = {};
       }
       
@@ -262,6 +278,42 @@ package com.sulake.habbo.window.utils.bobba
             return;
          }
          send(BobbaWireCodec.LOOKUP_BOBBA_USERS,[nicknamesCsv != null ? nicknamesCsv : ""]);
+      }
+      
+      public function setRoomAvatarEffect(roomKey:String, effectId:int) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.SET_ROOM_AVATAR_EFFECT,[roomKey != null ? roomKey : "",effectId]);
+      }
+      
+      public function syncRoomAvatarEffects(roomKey:String) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.SYNC_ROOM_AVATAR_EFFECTS,[roomKey != null ? roomKey : ""]);
+      }
+      
+      public function setRoomAvatarFigure(roomKey:String, figure:String, sex:String) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.SET_ROOM_AVATAR_FIGURE,[roomKey != null ? roomKey : "",figure != null ? figure : "",sex != null ? sex : ""]);
+      }
+      
+      public function syncRoomAvatarFigures(roomKey:String) : void
+      {
+         if(!_authed)
+         {
+            return;
+         }
+         send(BobbaWireCodec.SYNC_ROOM_AVATAR_FIGURES,[roomKey != null ? roomKey : ""]);
       }
       
       public function requestLegacyPrice(classname:String, historyDays:int = 30, includeAllHotels:Boolean = true, handler:Object = null) : void
@@ -560,6 +612,14 @@ package com.sulake.habbo.window.utils.bobba
             }
             syncNicknameFromSession();
             notifyBackendReadyIfLinked();
+            if(_effectListener != null)
+            {
+               _effectListener.onBackendReady();
+            }
+            if(_lookListener != null)
+            {
+               _lookListener.onBackendReady();
+            }
             return;
          }
          if(id == BobbaWireCodec.AUTH_FAIL)
@@ -618,12 +678,113 @@ package com.sulake.habbo.window.utils.bobba
             }
             return;
          }
+         if(id == BobbaWireCodec.ROOM_AVATAR_EFFECT)
+         {
+            if(_effectListener != null)
+            {
+               _effectListener.onRoomAvatarEffect(BobbaWireCodec.readString(payload),BobbaWireCodec.readInt(payload),BobbaWireCodec.readString(payload));
+            }
+            return;
+         }
+         if(id == BobbaWireCodec.ROOM_AVATAR_EFFECTS_STATE)
+         {
+            dispatchRoomAvatarEffectsState(payload);
+            return;
+         }
+         if(id == BobbaWireCodec.ROOM_AVATAR_FIGURE)
+         {
+            if(_lookListener != null)
+            {
+               _lookListener.onRoomAvatarFigure(BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload),BobbaWireCodec.readString(payload));
+            }
+            return;
+         }
+         if(id == BobbaWireCodec.ROOM_AVATAR_FIGURES_STATE)
+         {
+            dispatchRoomAvatarFiguresState(payload);
+            return;
+         }
          if(id == BobbaWireCodec.LEGACY_PRICE_RESULT)
          {
             dispatchLegacyPriceResult(payload);
             return;
          }
          handleGroupPacket(id,payload);
+      }
+      
+      private function dispatchRoomAvatarEffectsState(payload:ByteArray) : void
+      {
+         var roomKey:String = null;
+         var count:int = 0;
+         var i:int = 0;
+         var entries:Array = [];
+         try
+         {
+            payload.endian = Endian.BIG_ENDIAN;
+            roomKey = BobbaWireCodec.readString(payload);
+            count = BobbaWireCodec.readInt(payload);
+            if(count < 0)
+            {
+               count = 0;
+            }
+            if(count > 80)
+            {
+               count = 80;
+            }
+            for(i = 0; i < count; i++)
+            {
+               entries.push({
+                  "nickname":BobbaWireCodec.readString(payload),
+                  "effectId":BobbaWireCodec.readInt(payload)
+               });
+            }
+            if(_effectListener != null)
+            {
+               _effectListener.onRoomAvatarEffectsState(roomKey,entries);
+            }
+         }
+         catch(fxStateErr:Error)
+         {
+            Logger.log("[BobbaBackend] effect state decode failed",fxStateErr.message);
+         }
+      }
+      
+      private function dispatchRoomAvatarFiguresState(payload:ByteArray) : void
+      {
+         var roomKey:String = null;
+         var count:int = 0;
+         var i:int = 0;
+         var entries:Array = [];
+         try
+         {
+            payload.endian = Endian.BIG_ENDIAN;
+            roomKey = BobbaWireCodec.readString(payload);
+            count = BobbaWireCodec.readInt(payload);
+            if(count < 0)
+            {
+               count = 0;
+            }
+            if(count > 80)
+            {
+               count = 80;
+            }
+            for(i = 0; i < count; i++)
+            {
+               entries.push({
+                  "nickname":BobbaWireCodec.readString(payload),
+                  "figure":BobbaWireCodec.readString(payload),
+                  "sex":BobbaWireCodec.readString(payload)
+               });
+            }
+            if(_lookListener != null)
+            {
+               _lookListener.onRoomAvatarFiguresState(roomKey,entries);
+            }
+         }
+         catch(lookStateErr:Error)
+         {
+            Logger.log("[BobbaBackend] figure state decode failed",lookStateErr.message);
+         }
       }
       
       private function dispatchLegacyPriceResult(payload:ByteArray) : void

@@ -49,7 +49,11 @@ Also reachable from Bobba Helper → Extra. An in-client song editor: browse sou
 
 ## Avatar editor Clothes button
 
-Opens a separate **Bobba Clothes** avatar editor (unlocked wardrobe, instance 3) with `bobba_clothes_hero.png` behind the nickname. Visibility is gated by **Ver visuais Bobba** in `:bobba` (`BobbaLooksEnabled`); when that toggle is off, DevWar is also disabled. Closing the editor disposes wardrobe data from RAM and keeps only the look the user saved. Disabling the toggle reverts the avatar to its original clothing.
+Opens a separate **Bobba Clothes** avatar editor (unlocked wardrobe, instance 3) with `bobba_clothes_hero.png` behind the nickname. Visibility is gated by **Ver visuais Bobba** in `:bobba` (`BobbaLooksEnabled`); when that toggle is off, DevWar is also disabled. Closing the editor disposes wardrobe data from RAM and keeps only the look the user saved. Disabling the toggle reverts the avatar to its original clothing. Other Bobba clients in the same room see the look over the sidecar; nothing is sent to the Habbo hotel.
+
+## Bobba avatar FX (NPCkey / BobbaKey)
+
+NPCkey (fx 9002) and BobbaKey (fx 9001) appear in the wardrobe **Effects** tab. Official Metakey (fx 212) is unchanged. Save applies the Bobba overlays locally; nothing is sent to the Habbo hotel. Other Bobba users in the same room see them over the sidecar.
 
 ## Local room assets
 
