@@ -2,6 +2,7 @@ package com.sulake.habbo.ui.widget.chatinput
 {
    import com.sulake.core.assets.XmlAsset;
    import com.sulake.core.runtime.IComponent_1;
+   import com.sulake.core.utils.FontEnum;
    import com.sulake.core.window.IWindowController_1;
    import com.sulake.core.window.IWindowModel;
    import com.sulake.core.window.components.IBitmapWrapperController;
@@ -40,11 +41,13 @@ package com.sulake.habbo.ui.widget.chatinput
    import flash.filesystem.File;
    import flash.filesystem.FileMode;
    import flash.filesystem.FileStream;
+   import flash.geom.Matrix;
    import flash.geom.Point;
    import flash.geom.Rectangle;
    import flash.text.TextField;
    import flash.text.TextFormat;
    import flash.utils.ByteArray;
+   import flash.utils.Dictionary;
    import flash.utils.Timer;
    
    public class RoomChatInputView
@@ -58,21 +61,21 @@ package com.sulake.habbo.ui.widget.chatinput
       
       private static const UnknownConstFromRoomChatInputView_String_1:String = "habbicons/open";
       
-      private static const COMMANDS_MENU_MIN_HEIGHT:int = 91;
+      private static const COMMANDS_GRID_COLUMNS:int = 8;
       
-      private static const COMMANDS_MENU_MAX_HEIGHT:int = 292;
+      private static const COMMANDS_SLOT_SIZE:int = 32;
       
-      private static const COMMANDS_TOP_BAR_HEIGHT:int = 42;
+      private static const COMMANDS_SLOT_SPACING:int = 2;
       
-      private static const COMMANDS_BOTTOM_PADDING:int = 6;
+      private static const COMMANDS_MENU_PAD:int = 4;
       
-      private static const COMMANDS_GRID_COLUMNS:int = 5;
+      private static const COMMANDS_ICON_NUDGE_X:int = -2;
       
-      private static const COMMANDS_PLACEHOLDER_SLOTS:int = 20;
+      private static const COMMANDS_ICON_NUDGE_Y:int = -2;
       
       private static const COMMANDS_SLOT_EMPTY_COLOR:uint = 4281611316;
       
-      private static const COMMANDS_CHAT_BAR_POPUP_OFFSET:int = 55;
+      private static const COMMANDS_CHAT_GAP:int = 8;
       
       private static const COMMANDS_SCREEN_LEFT_BORDER:int = 92;
       
@@ -164,6 +167,8 @@ package com.sulake.habbo.ui.widget.chatinput
       
       private var _commandsSectionList:IItemListWindow;
       
+      private var _commandsSlotChars:Dictionary;
+      
       private var _helpIcon:IBitmapWrapperController;
       
       private var _helpFrames:Array;
@@ -185,13 +190,13 @@ package com.sulake.habbo.ui.widget.chatinput
          UnknownVarFromRoomChatInputView_Timer_1.addEventListener("timerComplete",onTypingTimerComplete);
          UnknownVarFromRoomChatInputView_Timer_2 = new Timer(10000,1);
          UnknownVarFromRoomChatInputView_Timer_2.addEventListener("timerComplete",onIdleTimerComplete);
-         UnknownVarFromRoomChatInputView_Boolean_6 = Boolean(sessionDataManager.isNoob) || Boolean(sessionDataManager.isRealNoob);
+         UnknownVarFromRoomChatInputView_Boolean_6 = sessionDataManager.isNoob || sessionDataManager.isRealNoob;
          if(UnknownVarFromRoomChatInputView_Boolean_6)
          {
             _loc3_ = param1.handler.container.config;
             if(_loc3_.getProperty("nux.chat.reminder.shown") != "1")
             {
-               _loc2_ = int(_loc3_.getInteger("nux.noob.chat.reminder.delay",240));
+               _loc2_ = _loc3_.getInteger("nux.noob.chat.reminder.delay",240);
                UnknownVarFromRoomChatInputView_Timer_3 = new Timer(_loc2_ * 1000,1);
                UnknownVarFromRoomChatInputView_Timer_3.addEventListener("timerComplete",onNuxIdleTimerComplete);
                UnknownVarFromRoomChatInputView_Timer_3.start();
@@ -426,7 +431,7 @@ package com.sulake.habbo.ui.widget.chatinput
             _loc6_ = _widget.handler.container.freeFlowChat;
             _loc1_ = [];
             _loc2_ = _widget.roomUi.getProperty("disabled.custom.chat.styles").split(",");
-            _loc3_ = Boolean(_loc5_.hasSecurity(4));
+            _loc3_ = _loc5_.hasSecurity(4);
             for each(var _loc4_ in _loc6_.chatStyleLibrary.getStyleIds())
             {
                if(Boolean(this.widget.windowManager.LilithCustomsInstance.ShowAllChatBubbles) == true)
@@ -550,23 +555,23 @@ package com.sulake.habbo.ui.widget.chatinput
          {
             return;
          }
-         var _loc5_:int = widget.getToolBarWidth();
-         var _loc7_:int = widget.getFriendBarWidth();
-         var _loc6_:int = _window.desktop.width / 2 - UnknownVarFromRoomChatInputView_IWindowController_1_1.width / 2;
-         var _loc8_:* = 0;
-         var _loc9_:int = UnknownVarFromRoomChatInputView_IWindowController_1_1.width + 12;
-         var _loc4_:* = _window.desktop.width - _loc5_ - _loc7_ > _loc9_;
-         if(_loc4_)
+         var _loc6_:int = widget.getToolBarWidth();
+         var _loc8_:int = widget.getFriendBarWidth();
+         var _loc7_:int = _window.desktop.width / 2 - UnknownVarFromRoomChatInputView_IWindowController_1_1.width / 2;
+         var _loc9_:* = 0;
+         var _loc10_:int = UnknownVarFromRoomChatInputView_IWindowController_1_1.width + 12;
+         var _loc5_:* = _window.desktop.width - _loc6_ - _loc8_ > _loc10_;
+         if(_loc5_)
          {
-            _loc8_ = _loc5_ + 10;
+            _loc9_ = _loc6_ + 10;
             UnknownVarFromRoomChatInputView_IWindowController_1_1.y = _window.desktop.height - 104;
          }
          else
          {
-            _loc8_ = widget.getRoomToolsWidth() + 12;
+            _loc9_ = widget.getRoomToolsWidth() + 12;
             UnknownVarFromRoomChatInputView_IWindowController_1_1.y = _window.desktop.height - 160;
          }
-         UnknownVarFromRoomChatInputView_IWindowController_1_1.x = Math.max(_loc6_,_loc8_);
+         UnknownVarFromRoomChatInputView_IWindowController_1_1.x = Math.max(_loc7_,_loc9_);
          if(UnknownVarFromRoomChatInputView_ChatStyleSelector_1)
          {
             UnknownVarFromRoomChatInputView_ChatStyleSelector_1.alignMenuToSelector();
@@ -576,6 +581,7 @@ package com.sulake.habbo.ui.widget.chatinput
             UnknownVarFromRoomChatInputView_HabbiconSelector_1.alignToAnchor();
          }
          alignCommandsSelector();
+         syncHelpButtonIconPosition();
       }
       
       private function onSend(param1:WindowMouseEvent) : void
@@ -870,7 +876,7 @@ package com.sulake.habbo.ui.widget.chatinput
       
       private function onChatReminderTimer(param1:TimerEvent) : void
       {
-         UnknownVarFromRoomChatInputView_Int_2 += 1;
+         UnknownVarFromRoomChatInputView_Int_2 = UnknownVarFromRoomChatInputView_Int_2 + 1;
          if(UnknownVarFromRoomChatInputView_Int_2 % 2 != 0)
          {
             _widget.mainWindow.y -= 1;
@@ -1042,7 +1048,7 @@ package com.sulake.habbo.ui.widget.chatinput
                _loc4_--;
             }
             UnknownVarFromRoomChatInputView_ChatStyleSelector_1.initSelection();
-            var _loc3_:int = int(_widget.handler.container.freeFlowChat.chatFontSizeMode);
+            var _loc3_:int = _widget.handler.container.freeFlowChat.chatFontSizeMode;
             UnknownVarFromRoomChatInputView_ChatStyleSelector_1.initFontSizeSelection(_loc3_);
             return;
          }
@@ -1424,7 +1430,7 @@ package com.sulake.habbo.ui.widget.chatinput
          _loc1_ = habbiconController;
          if(_loc1_ != null)
          {
-            _loc2_ = int(_loc1_.unseenHabbiconCount);
+            _loc2_ = _loc1_.unseenHabbiconCount;
          }
          if(UnknownVarFromRoomChatInputView_IWindowController_1_3 == null)
          {
@@ -1487,44 +1493,64 @@ package com.sulake.habbo.ui.widget.chatinput
       
       private function applyHelpButtonAsset() : void
       {
-         var btn:IWindowController_1 = null;
-         var child:IWindowModel = null;
-         var i:int = 0;
+         var btn:* = null;
+         var parent:IWindowController_1 = null;
          var file:File = null;
          var stream:FileStream = null;
          var bytes:ByteArray = null;
+         var idx:int = 0;
          if(UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1 == null || _widget == null || _widget.windowManager == null)
          {
             return;
          }
-         btn = UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1 as IWindowController_1;
-         if(btn == null)
+         btn = UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1;
+         parent = btn.parent as IWindowController_1;
+         if(parent == null)
+         {
+            parent = UnknownVarFromRoomChatInputView_IWindowController_1_1;
+         }
+         if(parent == null)
          {
             return;
          }
-         i = 0;
-         while(i < btn.numChildren)
+         try
          {
-            child = btn.getChildAt(i);
-            if(child != null && child != _helpIcon)
-            {
-               child.visible = false;
-               child.ignoreMouseEvents = true;
-            }
-            i++;
+            btn.background = false;
+         }
+         catch(errBg:Error)
+         {
+         }
+         try
+         {
+            // Hide native help_button_skin_3 draw; custom icon is a sibling so it stays visible.
+            btn.blend = 0;
+         }
+         catch(errBlend:Error)
+         {
          }
          if(_helpIcon == null)
          {
-            _helpIcon = _widget.windowManager.create("bobba_helpbutton_icon",21,0,0,new Rectangle(0,0,19,20),null) as IBitmapWrapperController;
+            _helpIcon = _widget.windowManager.create("bobba_helpbutton_icon",21,0,0,new Rectangle(0,0,19,20),null,"",0,null,parent) as IBitmapWrapperController;
             if(_helpIcon == null)
             {
-               return;
+               _helpIcon = _widget.windowManager.create("bobba_helpbutton_icon",21,0,0,new Rectangle(0,0,19,20),null) as IBitmapWrapperController;
+               if(_helpIcon == null)
+               {
+                  Logger.log("[BobbaHelpBtn] create icon failed");
+                  return;
+               }
+               parent.addChild(_helpIcon);
             }
             _helpIcon.disposesBitmap = false;
             _helpIcon.ignoreMouseEvents = true;
             _helpIcon.mouseThreshold = 0;
-            btn.addChild(_helpIcon);
+            idx = parent.getChildIndex(btn as IWindowModel);
+            if(idx >= 0)
+            {
+               parent.setChildIndex(_helpIcon,Math.min(idx + 1,parent.numChildren - 1));
+            }
          }
+         syncHelpButtonIconPosition();
          if(_helpLoader != null)
          {
             try
@@ -1540,8 +1566,10 @@ package com.sulake.habbo.ui.widget.chatinput
          file = resolveHelpButtonAssetFile();
          if(file == null || !file.exists)
          {
+            Logger.log("[BobbaHelpBtn] asset missing helpbutton.png");
             return;
          }
+         Logger.log("[BobbaHelpBtn] loading " + file.nativePath);
          _helpLoader = new Loader();
          _helpLoader.contentLoaderInfo.addEventListener("complete",onHelpButtonAssetLoaded);
          _helpLoader.contentLoaderInfo.addEventListener("ioError",onHelpButtonAssetError);
@@ -1556,7 +1584,31 @@ package com.sulake.habbo.ui.widget.chatinput
          }
          catch(errLoad:Error)
          {
+            Logger.log("[BobbaHelpBtn] load error " + errLoad.message);
             onHelpButtonAssetError(null);
+         }
+      }
+      
+      private function syncHelpButtonIconPosition() : void
+      {
+         var btn:* = null;
+         if(_helpIcon == null || UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1 == null)
+         {
+            return;
+         }
+         btn = UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1;
+         // Cover the whole native closebutton slot so no blue skin peeks around the icon.
+         _helpIcon.width = btn.width;
+         _helpIcon.height = btn.height;
+         _helpIcon.x = btn.x;
+         _helpIcon.y = btn.y;
+         _helpIcon.visible = true;
+         try
+         {
+            btn.blend = 0;
+         }
+         catch(errBlend:Error)
+         {
          }
       }
       
@@ -1598,7 +1650,13 @@ package com.sulake.habbo.ui.widget.chatinput
          var src:BitmapData = null;
          var frameW:int = 0;
          var i:int = 0;
+         var raw:BitmapData = null;
          var frame:BitmapData = null;
+         var btn:* = null;
+         var canvasW:int = 0;
+         var canvasH:int = 0;
+         var ox:int = 0;
+         var oy:int = 0;
          if(_helpLoader == null)
          {
             return;
@@ -1614,31 +1672,49 @@ package com.sulake.habbo.ui.widget.chatinput
          {
             return;
          }
+         btn = UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1;
+         canvasW = btn != null && btn.width > 0 ? int(btn.width) : frameW;
+         canvasH = btn != null && btn.height > 0 ? int(btn.height) : src.height;
          disposeHelpButtonFrames();
          _helpFrames = [];
          i = 0;
          while(i < 3)
          {
-            frame = new BitmapData(frameW,src.height,true,0);
-            frame.copyPixels(src,new Rectangle(i * frameW,0,frameW,src.height),new Point(0,0));
+            raw = new BitmapData(frameW,src.height,true,0);
+            raw.copyPixels(src,new Rectangle(i * frameW,0,frameW,src.height),new Point(0,0));
+            frame = new BitmapData(canvasW,canvasH,true,0);
+            ox = int((canvasW - frameW) / 2);
+            oy = int((canvasH - src.height) / 2);
+            frame.copyPixels(raw,raw.rect,new Point(ox,oy));
+            raw.dispose();
             _helpFrames.push(frame);
             i++;
          }
          if(_helpIcon != null)
          {
-            _helpIcon.width = frameW;
-            _helpIcon.height = src.height;
-            if(UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1 != null)
-            {
-               _helpIcon.x = int((UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1.width - frameW) / 2);
-               _helpIcon.y = int((UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1.height - src.height) / 2);
-            }
+            _helpIcon.width = canvasW;
+            _helpIcon.height = canvasH;
          }
+         syncHelpButtonIconPosition();
          setHelpButtonState(HELP_STATE_NORMAL);
+         Logger.log("[BobbaHelpBtn] loaded frames " + canvasW + "x" + canvasH);
       }
       
       private function onHelpButtonAssetError(param1:Event) : void
       {
+         var btn:* = null;
+         Logger.log("[BobbaHelpBtn] asset load failed");
+         btn = UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1;
+         if(btn != null)
+         {
+            try
+            {
+               btn.blend = 1;
+            }
+            catch(err:Error)
+            {
+            }
+         }
       }
       
       private function setHelpButtonState(state:int) : void
@@ -1696,6 +1772,7 @@ package com.sulake.habbo.ui.widget.chatinput
       {
          var assets:* = null;
          var built:* = null;
+         var topControls:IWindowModel = null;
          var searchInput:IWindowModel = null;
          var searchPlaceholder:IWindowModel = null;
          var searchClear:IWindowModel = null;
@@ -1708,9 +1785,16 @@ package com.sulake.habbo.ui.widget.chatinput
          var slot:IRegionWindow = null;
          var icon:IBitmapWrapperController = null;
          var bg:UnknownICoreWindowComponents6 = null;
+         var symbols:Array = null;
+         var ch:String = null;
          var i:int = 0;
          var rows:int = 0;
-         var total:int = 0;
+         var gridInnerW:int = 0;
+         var gridInnerH:int = 0;
+         var menuW:int = 0;
+         var menuH:int = 0;
+         var titleH:int = 0;
+         var iconSize:int = 0;
          if(_commandsMenu != null || _window == null || _widget == null || _widget.windowManager == null)
          {
             return;
@@ -1746,17 +1830,25 @@ package com.sulake.habbo.ui.widget.chatinput
          _commandsMenu = UnknownICoreWindowComponents6(built);
          _commandsMenu.visible = false;
          _commandsMenuContainer.addChild(_commandsMenu);
+         _commandsSlotChars = new Dictionary(true);
          _commandsSectionList = IItemListWindow(_commandsMenu.findChildByName("habbicon_section_list"));
          if(_commandsSectionList == null)
          {
             return;
          }
          _commandsSectionTemplate = IWindowController_1(_commandsSectionList.removeListItem(_commandsSectionList.getListItemByName("habbicon_section_template")));
+         topControls = _commandsMenu.findChildByName("top_controls");
          searchInput = _commandsMenu.findChildByName("habbicon_search_input");
          searchPlaceholder = _commandsMenu.findChildByName("habbicon_search_placeholder");
          searchClear = _commandsMenu.findChildByName("habbicon_search_clear_button");
          openHub = _commandsMenu.findChildByName("habbicon_open_hub_button");
          emptyView = _commandsMenu.findChildByName("empty_view");
+         if(topControls != null)
+         {
+            topControls.visible = false;
+            topControls.width = 0;
+            topControls.height = 0;
+         }
          if(searchInput != null)
          {
             searchInput.visible = false;
@@ -1776,18 +1868,23 @@ package com.sulake.habbo.ui.widget.chatinput
          if(emptyView != null)
          {
             emptyView.visible = false;
+            emptyView.width = 0;
+            emptyView.height = 0;
          }
          if(_commandsSectionTemplate == null)
          {
             return;
          }
+         symbols = getCommandsAltSymbols();
          section = IWindowController_1(_commandsSectionTemplate.clone());
          section.visible = true;
          title = ITextWindow(section.findChildByName("section_title"));
          if(title != null)
          {
-            title.caption = "Commands";
+            title.visible = false;
+            title.height = 0;
          }
+         titleH = 0;
          grid = IItemGridWindow(section.findChildByName("habbicon_grid"));
          if(grid == null)
          {
@@ -1795,15 +1892,36 @@ package com.sulake.habbo.ui.widget.chatinput
          }
          slotTemplate = grid.getGridItemAt(0) as IWindowController_1;
          grid.removeGridItems();
-         rows = Math.max(1,Math.ceil(COMMANDS_PLACEHOLDER_SLOTS / COMMANDS_GRID_COLUMNS));
-         total = rows * COMMANDS_GRID_COLUMNS;
+         grid.visible = false;
+         grid.width = 0;
+         grid.height = 0;
+         rows = Math.max(1,Math.ceil(Number(symbols.length) / Number(COMMANDS_GRID_COLUMNS)));
+         gridInnerW = COMMANDS_GRID_COLUMNS * COMMANDS_SLOT_SIZE + (COMMANDS_GRID_COLUMNS - 1) * COMMANDS_SLOT_SPACING;
+         gridInnerH = rows * COMMANDS_SLOT_SIZE + (rows - 1) * COMMANDS_SLOT_SPACING;
+         iconSize = COMMANDS_SLOT_SIZE;
+         Logger.log("[BobbaCommands] building symbols=" + symbols.length + " rows=" + rows);
          i = 0;
-         while(i < total)
+         while(i < symbols.length)
          {
+            ch = symbols[i] as String;
             slot = slotTemplate.clone() as IRegionWindow;
             if(slot != null)
             {
+               slot.width = COMMANDS_SLOT_SIZE;
+               slot.height = COMMANDS_SLOT_SIZE;
+               slot.x = int(i % COMMANDS_GRID_COLUMNS) * (COMMANDS_SLOT_SIZE + COMMANDS_SLOT_SPACING);
+               slot.y = int(i / COMMANDS_GRID_COLUMNS) * (COMMANDS_SLOT_SIZE + COMMANDS_SLOT_SPACING);
                slot.toolTipCaption = "";
+               slot.toolTipDelay = 0;
+               bg = UnknownICoreWindowComponents6(slot.findChildByName("habbicon_item_bg"));
+               if(bg != null)
+               {
+                  bg.x = 0;
+                  bg.y = 0;
+                  bg.width = COMMANDS_SLOT_SIZE;
+                  bg.height = COMMANDS_SLOT_SIZE;
+                  bg.color = COMMANDS_SLOT_EMPTY_COLOR;
+               }
                icon = IBitmapWrapperController(slot.findChildByName("habbicon_icon"));
                if(icon != null)
                {
@@ -1812,26 +1930,142 @@ package com.sulake.habbo.ui.widget.chatinput
                      icon.bitmap.dispose();
                      icon.bitmap = null;
                   }
-                  icon.visible = false;
+                  icon.width = iconSize;
+                  icon.height = iconSize;
+                  icon.x = 0;
+                  icon.y = 0;
+                  if(ch != null && ch.length > 0)
+                  {
+                     icon.bitmap = renderCommandsSymbolBitmap(ch,iconSize);
+                     icon.visible = true;
+                     icon.invalidate();
+                     _commandsSlotChars[slot] = ch;
+                     slot.addEventListener("WME_CLICK",onCommandsSymbolClick);
+                  }
+                  else
+                  {
+                     icon.visible = false;
+                  }
                }
-               bg = UnknownICoreWindowComponents6(slot.findChildByName("habbicon_item_bg"));
-               if(bg != null)
-               {
-                  bg.color = COMMANDS_SLOT_EMPTY_COLOR;
-               }
-               slot.mouseThreshold = 10;
-               grid.addGridItem(slot);
+               slot.mouseThreshold = 0;
+               section.addChild(slot);
             }
             i++;
          }
-         grid.height = rows * (slotTemplate != null ? slotTemplate.height + 2 : 44);
-         section.height = grid.y + grid.height;
+         section.x = 0;
+         section.y = 0;
+         section.width = gridInnerW;
+         section.height = gridInnerH;
          while(_commandsSectionList.numListItems > 0)
          {
             _commandsSectionList.removeListItemAt(0).dispose();
          }
          _commandsSectionList.addListItem(section);
-         _commandsMenu.height = Math.max(COMMANDS_MENU_MIN_HEIGHT,Math.min(COMMANDS_MENU_MAX_HEIGHT,COMMANDS_TOP_BAR_HEIGHT + section.height + COMMANDS_BOTTOM_PADDING));
+         menuW = gridInnerW + COMMANDS_MENU_PAD * 2;
+         menuH = gridInnerH + COMMANDS_MENU_PAD * 2;
+         _commandsSectionList.x = COMMANDS_MENU_PAD;
+         _commandsSectionList.y = COMMANDS_MENU_PAD;
+         _commandsSectionList.width = gridInnerW;
+         _commandsSectionList.height = gridInnerH;
+         _commandsMenu.width = menuW;
+         _commandsMenu.height = menuH;
+         if(_commandsMenuContainer != null && _commandsMenuContainer != _window)
+         {
+            _commandsMenuContainer.width = menuW;
+            _commandsMenuContainer.height = menuH;
+         }
+         Logger.log("[BobbaCommands] done menu=" + menuW + "x" + menuH);
+         _commandsMenu.invalidate();
+      }
+      
+      private function getCommandsAltSymbols() : Array
+      {
+         // Habbo ALT symbols via code points (ASCII-safe for FFDec inject).
+         // 246 775 167 422 134 175 0135 276 | 124 159 157 9898 0151 753 0145 230
+         return [String.fromCharCode(247),String.fromCharCode(8226),String.fromCharCode(186),String.fromCharCode(170),String.fromCharCode(8224),String.fromCharCode(187),String.fromCharCode(8225),String.fromCharCode(182),String.fromCharCode(124),String.fromCharCode(402),String.fromCharCode(165),String.fromCharCode(172),String.fromCharCode(8212),String.fromCharCode(177),String.fromCharCode(8216),String.fromCharCode(181)];
+      }
+      
+      private function renderCommandsSymbolBitmap(ch:String, size:int) : BitmapData
+      {
+         var bd:BitmapData = null;
+         var tf:TextField = null;
+         var fmt:TextFormat = null;
+         var fontName:String = null;
+         var fontSize:int = 0;
+         var ox:int = 0;
+         var oy:int = 0;
+         var m:Matrix = null;
+         var code:int = 0;
+         bd = new BitmapData(size,size,true,0);
+         tf = new TextField();
+         tf.selectable = false;
+         tf.mouseEnabled = false;
+         tf.multiline = false;
+         tf.wordWrap = false;
+         tf.autoSize = "left";
+         fontName = "Ubuntu";
+         code = ch != null && ch.length > 0 ? int(ch.charCodeAt(0)) : 0;
+         fontSize = code == 172 ? 12 : 17;
+         fmt = new TextFormat();
+         if(FontEnum.isEmbeddedFont(fontName))
+         {
+            fmt.font = fontName;
+            fmt.bold = false;
+            tf.embedFonts = true;
+            tf.antiAliasType = "advanced";
+            tf.gridFitType = "pixel";
+            tf.sharpness = 0;
+            tf.thickness = 0;
+         }
+         else
+         {
+            fmt.font = fontName;
+            tf.embedFonts = false;
+         }
+         fmt.size = fontSize;
+         fmt.color = 16777215;
+         fmt.align = "left";
+         tf.defaultTextFormat = fmt;
+         tf.text = ch != null ? ch : "";
+         ox = int((size - tf.textWidth) / 2) + COMMANDS_ICON_NUDGE_X;
+         oy = int((size - tf.textHeight) / 2) + COMMANDS_ICON_NUDGE_Y;
+         m = new Matrix();
+         m.translate(ox,oy);
+         bd.draw(tf,m);
+         return bd;
+      }
+      
+      private function onCommandsSymbolClick(param1:WindowMouseEvent) : void
+      {
+         var node:IWindowModel = null;
+         var ch:String = null;
+         if(param1 == null || _commandsSlotChars == null)
+         {
+            return;
+         }
+         node = param1.window;
+         while(node != null)
+         {
+            ch = _commandsSlotChars[node] as String;
+            if(ch != null && ch.length > 0)
+            {
+               insertCommandsSymbol(ch);
+               return;
+            }
+            node = node.parent;
+         }
+      }
+      
+      private function insertCommandsSymbol(param1:String) : void
+      {
+         if(UnknownVarFromRoomChatInputView_ITextFieldWindow_1 == null || param1 == null || param1.length == 0)
+         {
+            return;
+         }
+         setInputFieldFocus();
+         UnknownVarFromRoomChatInputView_ITextFieldWindow_1.text += param1;
+         UnknownVarFromRoomChatInputView_ITextFieldWindow_1.setSelection(UnknownVarFromRoomChatInputView_ITextFieldWindow_1.text.length,UnknownVarFromRoomChatInputView_ITextFieldWindow_1.text.length);
+         UnknownVarFromRoomChatInputView_String_3 = UnknownVarFromRoomChatInputView_ITextFieldWindow_1.text;
       }
       
       private function toggleCommandsSelector() : void
@@ -1860,18 +2094,33 @@ package com.sulake.habbo.ui.widget.chatinput
       
       private function alignCommandsSelector() : void
       {
-         var anchorRect:Rectangle = null;
+         var chatRect:Rectangle = null;
          var parent:IWindowController_1 = null;
          var global:Point = null;
-         if(_commandsMenu == null || !_commandsMenu.visible || UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1 == null || _commandsMenu.parent == null)
+         var targetX:int = 0;
+         var menuW:int = 0;
+         var menuH:int = 0;
+         if(_commandsMenu == null || !_commandsMenu.visible || UnknownVarFromRoomChatInputView_IWindowController_1_1 == null || _commandsMenu.parent == null)
          {
             return;
          }
-         anchorRect = new Rectangle();
-         UnknownVarFromRoomChatInputView_UnknownICoreWindowComponents8_1.getGlobalRectangle(anchorRect);
+         menuW = _commandsMenu.width;
+         menuH = _commandsMenu.height;
+         chatRect = new Rectangle();
+         if(UnknownVarFromRoomChatInputView_IWindowModel_1 != null)
+         {
+            UnknownVarFromRoomChatInputView_IWindowModel_1.getGlobalRectangle(chatRect);
+         }
+         else
+         {
+            UnknownVarFromRoomChatInputView_IWindowController_1_1.getGlobalRectangle(chatRect);
+         }
          parent = IWindowController_1(_commandsMenu.parent);
-         parent.x = anchorRect.x;
-         parent.y = anchorRect.bottom - COMMANDS_CHAT_BAR_POPUP_OFFSET - _commandsMenu.height;
+         parent.width = menuW;
+         parent.height = menuH;
+         targetX = int(chatRect.x + (chatRect.width - menuW) / 2);
+         parent.x = targetX;
+         parent.y = int(chatRect.y - COMMANDS_CHAT_GAP - menuH);
          global = new Point();
          parent.getGlobalPosition(global);
          if(global.x < COMMANDS_SCREEN_LEFT_BORDER)
@@ -1886,6 +2135,24 @@ package com.sulake.habbo.ui.widget.chatinput
       
       private function disposeCommandsSelector() : void
       {
+         var slot:* = null;
+         if(_commandsSlotChars != null)
+         {
+            for(slot in _commandsSlotChars)
+            {
+               try
+               {
+                  if(slot != null)
+                  {
+                     slot.removeEventListener("WME_CLICK",onCommandsSymbolClick);
+                  }
+               }
+               catch(err:Error)
+               {
+               }
+            }
+            _commandsSlotChars = null;
+         }
          if(_commandsMenu != null)
          {
             _commandsMenu.dispose();

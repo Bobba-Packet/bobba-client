@@ -18,6 +18,10 @@ cleanswf/scripts/**
 !cleanswf/scripts/com/sulake/habbo/
 !cleanswf/scripts/com/sulake/habbo/messenger/
 !cleanswf/scripts/com/sulake/habbo/messenger/MainView.as
+!cleanswf/scripts/com/sulake/habbo/ui/
+!cleanswf/scripts/com/sulake/habbo/ui/widget/
+!cleanswf/scripts/com/sulake/habbo/ui/widget/chatinput/
+!cleanswf/scripts/com/sulake/habbo/ui/widget/chatinput/RoomChatInputView.as
 !cleanswf/scripts/com/sulake/habbo/window/
 !cleanswf/scripts/com/sulake/habbo/window/utils/
 !cleanswf/scripts/com/sulake/habbo/window/utils/bobba/
@@ -36,6 +40,8 @@ cleanswf/scripts/**
 # Tooling scratch
 tools/inject-staging/
 tools/inject-log.txt
+tools/_*/
+tools/_*
 tools/_ffdec_extract_help/
 tools/_export_check/
 
